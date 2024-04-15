@@ -34,6 +34,8 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
 
             presenter.viewDidLoad(view: self)
             setupUI()
+            //NetworkingManager.shared.fetchMainProducts()
+            NetworkingManager.shared.fetchSuggestedProducts()
         }
 }
 

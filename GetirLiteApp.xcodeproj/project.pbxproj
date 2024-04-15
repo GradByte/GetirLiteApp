@@ -25,6 +25,7 @@
 		AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */; };
 		AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */; };
 		AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA82BCD54220018A223 /* SplashProtocols.swift */; };
+		AA927DAB2BCD5DE10018A223 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DAA2BCD5DE10018A223 /* Networking.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingEntity.swift; sourceTree = "<group>"; };
 		AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingProtocols.swift; sourceTree = "<group>"; };
 		AA927DA82BCD54220018A223 /* SplashProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashProtocols.swift; sourceTree = "<group>"; };
+		AA927DAA2BCD5DE10018A223 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				AA20C3932BC838A5000873F8 /* Utils */,
+				AA927DAA2BCD5DE10018A223 /* Networking.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 			files = (
 				AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */,
 				AA20C3972BC838DE000873F8 /* LoadingShowable.swift in Sources */,
+				AA927DAB2BCD5DE10018A223 /* Networking.swift in Sources */,
 				AA927DA32BCD53100018A223 /* ProductListingRouter.swift in Sources */,
 				AA927D9F2BCD52F60018A223 /* ProductListingInteractor.swift in Sources */,
 				AA927D9D2BCD52E80018A223 /* ProductListingViewController.swift in Sources */,
