@@ -7,13 +7,6 @@
 
 import Foundation
 
-protocol SplashInteractorProtocol: AnyObject {
-    func checkInternetConnection()
-}
-
-protocol SplashInteractorOutputProtocol: AnyObject {
-    func internetConnection(status: Bool)
-}
 
 final class SplashInteractor {
     var output: SplashInteractorOutputProtocol?

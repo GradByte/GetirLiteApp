@@ -8,10 +8,6 @@
 import UIKit
 
 
-protocol SplashViewControllerProtocol: AnyObject {
-    func noInternetConnection()
-}
-
 class SplashViewController: BaseViewController {
     
     var presenter: SplashPresenterProtocol!
@@ -31,10 +27,14 @@ class SplashViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidAppear()
-        setupViews()
+        setupUI()
     }
     
-    private func setupViews() {
+}
+
+// MARK: - Setup UI Elements
+extension SplashViewController {
+    private func setupUI() {
         view.backgroundColor = .purple
         view.addSubview(label)
         
@@ -45,9 +45,9 @@ class SplashViewController: BaseViewController {
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    
 }
 
+// MARK: - Protocol
 extension SplashViewController: SplashViewControllerProtocol {
     
     func noInternetConnection() {

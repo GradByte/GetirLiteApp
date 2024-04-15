@@ -18,6 +18,13 @@
 		AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3912BC8383F000873F8 /* BaseViewController.swift */; };
 		AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3942BC838B3000873F8 /* LoadingView.swift */; };
 		AA20C3972BC838DE000873F8 /* LoadingShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3962BC838DE000873F8 /* LoadingShowable.swift */; };
+		AA927D9D2BCD52E80018A223 /* ProductListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */; };
+		AA927D9F2BCD52F60018A223 /* ProductListingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927D9E2BCD52F60018A223 /* ProductListingInteractor.swift */; };
+		AA927DA12BCD53010018A223 /* ProductListingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA02BCD53010018A223 /* ProductListingPresenter.swift */; };
+		AA927DA32BCD53100018A223 /* ProductListingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA22BCD53100018A223 /* ProductListingRouter.swift */; };
+		AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */; };
+		AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */; };
+		AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA82BCD54220018A223 /* SplashProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +41,13 @@
 		AA20C3912BC8383F000873F8 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		AA20C3942BC838B3000873F8 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		AA20C3962BC838DE000873F8 /* LoadingShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingShowable.swift; sourceTree = "<group>"; };
+		AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingViewController.swift; sourceTree = "<group>"; };
+		AA927D9E2BCD52F60018A223 /* ProductListingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingInteractor.swift; sourceTree = "<group>"; };
+		AA927DA02BCD53010018A223 /* ProductListingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingPresenter.swift; sourceTree = "<group>"; };
+		AA927DA22BCD53100018A223 /* ProductListingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingRouter.swift; sourceTree = "<group>"; };
+		AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingEntity.swift; sourceTree = "<group>"; };
+		AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingProtocols.swift; sourceTree = "<group>"; };
+		AA927DA82BCD54220018A223 /* SplashProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +122,12 @@
 		AA20C35E2BC7EF58000873F8 /* ProductListing */ = {
 			isa = PBXGroup;
 			children = (
+				AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */,
+				AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */,
+				AA927D9E2BCD52F60018A223 /* ProductListingInteractor.swift */,
+				AA927DA02BCD53010018A223 /* ProductListingPresenter.swift */,
+				AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */,
+				AA927DA22BCD53100018A223 /* ProductListingRouter.swift */,
 			);
 			path = ProductListing;
 			sourceTree = "<group>";
@@ -129,6 +149,7 @@
 		AA20C3872BC836B5000873F8 /* SplashScreen */ = {
 			isa = PBXGroup;
 			children = (
+				AA927DA82BCD54220018A223 /* SplashProtocols.swift */,
 				AA20C3882BC836D4000873F8 /* SplashViewController.swift */,
 				AA20C38A2BC836E5000873F8 /* SplashInteractor.swift */,
 				AA20C38C2BC836F6000873F8 /* SplashPresenter.swift */,
@@ -224,15 +245,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */,
 				AA20C3972BC838DE000873F8 /* LoadingShowable.swift in Sources */,
+				AA927DA32BCD53100018A223 /* ProductListingRouter.swift in Sources */,
+				AA927D9F2BCD52F60018A223 /* ProductListingInteractor.swift in Sources */,
+				AA927D9D2BCD52E80018A223 /* ProductListingViewController.swift in Sources */,
+				AA927DA12BCD53010018A223 /* ProductListingPresenter.swift in Sources */,
 				AA20C3892BC836D4000873F8 /* SplashViewController.swift in Sources */,
 				AA20C38F2BC836FD000873F8 /* SplashRouter.swift in Sources */,
 				AA20C38D2BC836F6000873F8 /* SplashPresenter.swift in Sources */,
 				AA20C33A2BC7ECF7000873F8 /* AppDelegate.swift in Sources */,
 				AA20C33C2BC7ECF7000873F8 /* SceneDelegate.swift in Sources */,
 				AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */,
+				AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */,
 				AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */,
 				AA20C38B2BC836E5000873F8 /* SplashInteractor.swift in Sources */,
+				AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
