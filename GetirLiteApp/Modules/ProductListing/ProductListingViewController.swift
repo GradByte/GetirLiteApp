@@ -10,6 +10,12 @@ import UIKit
 
 final class ProductListingViewController: UIViewController, ProductListingViewControllerProtocol {
     
+    private var horizontalCollectionView: UICollectionView!
+    private var verticalCollectionView: UICollectionView!
+    
+    private let horizontalCellIdentifier = "productCell"
+    private let verticalCellIdentifier = "productCell"
+    
     private var label: UILabel = {
         let label = UILabel()
         label.text = "ProductListingView"
@@ -37,20 +43,76 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
         //NetworkingManager.shared.fetchMainProducts()
         //NetworkingManager.shared.fetchSuggestedProducts()
         setupNavigationBar()
+        
+        setupHorizontalCollectionView()
+        setupVerticalCollectionView()
     }
 }
 
 // MARK: - Setup UI Elements
 extension ProductListingViewController {
     private func setupUI() {
-        view.backgroundColor = .white
-        view.addSubview(label)
+        view.backgroundColor = GetirColor.almostWhiteGray
+        setupHorizontalCollectionView()
+        setupHorizontalCollectionView()
+    }
+    
+    private func setupHorizontalCollectionView() {
+        // Create a layout for the horizontal collection view
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(100), heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(100))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 10
+            return section
+        }
         
-        label.translatesAutoresizingMaskIntoConstraints = false
+        // Initialize the horizontal collection view with the custom layout
+        horizontalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        horizontalCollectionView.backgroundColor = .white
+        horizontalCollectionView.register(ProductCell.self, forCellWithReuseIdentifier: horizontalCellIdentifier)
+        horizontalCollectionView.dataSource = self
+        view.addSubview(horizontalCollectionView)
         
+        // Enable horizontal scrolling
+        horizontalCollectionView.isScrollEnabled = true
+        
+        // Add constraints for horizontal collection view
+        horizontalCollectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            horizontalCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            horizontalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            horizontalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            horizontalCollectionView.heightAnchor.constraint(equalToConstant: 120) // Adjust height as needed
+        ])
+    }
+    
+    private func setupVerticalCollectionView() {
+        // Add the vertical collection view
+        let verticalLayout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.33))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 10
+            return section
+        }
+        verticalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: verticalLayout)
+        verticalCollectionView.backgroundColor = .white
+        verticalCollectionView.register(ProductCell.self, forCellWithReuseIdentifier: verticalCellIdentifier)
+        verticalCollectionView.dataSource = self
+        view.addSubview(verticalCollectionView)
+        
+        // Add constraints for vertical collection view
+        verticalCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            verticalCollectionView.topAnchor.constraint(equalTo: horizontalCollectionView.bottomAnchor, constant: 20),
+            verticalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            verticalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            verticalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -58,7 +120,11 @@ extension ProductListingViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = GetirColor.purple
-        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        let titleTextAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.boldSystemFont(ofSize: 16)
+        ]
+        appearance.titleTextAttributes = titleTextAttributes
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         title = "Ürünler"
@@ -105,11 +171,35 @@ extension ProductListingViewController {
         containerView.addSubview(billView)
         
         // Container view corner radius
-        containerView.layer.cornerRadius = 5
+        containerView.layer.cornerRadius = 10
         containerView.layer.masksToBounds = true
         
         // Create a bar button item with the container view
         let customButton = UIBarButtonItem(customView: containerView)
         return customButton
+    }
+}
+
+extension ProductListingViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10 // Return the number of items in the collection view
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == horizontalCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: horizontalCellIdentifier, for: indexPath) as! ProductCell
+            
+            // Configure the cell with data (provide image, price, name, and attribute)
+            cell.configure(with: UIImage(named: "bag.jpeg"), price: "$10.99", name: "Product Name", attribute: "Product Attribute")
+            
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: verticalCellIdentifier, for: indexPath) as! ProductCell
+            
+            // Configure the cell with data (provide image, price, name, and attribute)
+            cell.configure(with: UIImage(named: "bag.jpeg"), price: "$10.99", name: "Product Name", attribute: "Product Attribute")
+            
+            return cell
+        }
     }
 }
