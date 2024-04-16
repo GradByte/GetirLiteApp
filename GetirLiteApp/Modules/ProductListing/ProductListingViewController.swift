@@ -17,6 +17,8 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
     var suggestedProducts = [Product]()
     var mainProducts = [ProductElement]()
     
+    var selectedProducts = [String]() //store IDs
+    
     private var label: UILabel = {
         let label = UILabel()
         label.text = "ProductListingView"
@@ -243,31 +245,56 @@ extension ProductListingViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: productCellIdentifier, for: indexPath) as! ProductCell
-        
+                
         if indexPath.section == 0 {
             let currentProduct = suggestedProducts[indexPath.item]
             configureCellProduct(cell, with: currentProduct)
+            //check if cell needs to be highlighted
+            //else condition isnt required because we have prepareForReuse in place
+            if selectedProducts.contains(currentProduct.id ?? "") {
+                cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+            }
+            
         } else if indexPath.section == 1 {
             let currentProduct = mainProducts[indexPath.item]
             configureCellProductElement(cell, with: currentProduct)
+            //check if cell needs to be highlighted
+            //else condition isnt required because we have prepareForReuse in place
+            if selectedProducts.contains(currentProduct.id ?? "") {
+                cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+            }
         }
+        
+        cell.plusButtonTappedHandler = { [weak cell] in
+            guard let cell = cell else { return }
+            self.selectedProducts.append(cell.id)
+            self.handlePlusButtonTap(cell: cell)
+        }
+        
         
         return cell
     }
     
+    // Function to handle the plus button tap event
+    func handlePlusButtonTap(cell: ProductCell) {
+        // Set the border color of the cell's borderView to purple
+        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+        // Perform any other actions related to the plus button tap if needed
+    }
+    
     private func configureCellProduct(_ cell: ProductCell, with product: Product) {
         if let imageURL = URL(string: (product.imageURL ?? product.squareThumbnailURL) ?? "") {
-            cell.configure(with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "")
+            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "")
         } else {
-            cell.configure(with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "")
+            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "")
         }
     }
     
     private func configureCellProductElement(_ cell: ProductCell, with product: ProductElement) {
         if let imageURL = URL(string: product.imageURL ?? "") {
-            cell.configure(with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "")
+            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "")
         } else {
-            cell.configure(with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "")
+            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "")
         }
     }
 }
