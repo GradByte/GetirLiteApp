@@ -15,7 +15,7 @@ class SplashViewController: BaseViewController {
     var label: UILabel = {
         var label = UILabel()
         label.text = "getir"
-        label.textColor = .yellow
+        label.textColor = GetirColor.yellow
         if let customFont = UIFont(name: "GillSans-Bold", size: 38) {
             label.font = customFont
         } else {
@@ -35,7 +35,7 @@ class SplashViewController: BaseViewController {
 // MARK: - Setup UI Elements
 extension SplashViewController {
     private func setupUI() {
-        view.backgroundColor = .purple
+        view.backgroundColor = GetirColor.purple
         view.addSubview(label)
         
         label.translatesAutoresizingMaskIntoConstraints = false

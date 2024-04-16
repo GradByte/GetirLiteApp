@@ -33,7 +33,7 @@ extension SplashPresenter: SplashInteractorOutputProtocol {
     
     func internetConnection(status: Bool) {
         if status {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
                 guard let self else { return }
                 self.router.navigate(.productListing)
             }
