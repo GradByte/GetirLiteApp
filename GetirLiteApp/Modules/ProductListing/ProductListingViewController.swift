@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 final class ProductListingViewController: UIViewController, ProductListingViewControllerProtocol {
     
@@ -15,6 +16,9 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
     
     private let horizontalCellIdentifier = "productCell"
     private let verticalCellIdentifier = "productCell"
+    
+    var suggestedProducts = [Product]()
+    var mainProducts = [ProductElement]()
     
     private var label: UILabel = {
         let label = UILabel()
@@ -39,6 +43,7 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
         super.viewDidLoad()
         
         presenter.viewDidLoad(view: self)
+        
         setupUI()
         //NetworkingManager.shared.fetchMainProducts()
         //NetworkingManager.shared.fetchSuggestedProducts()
@@ -46,6 +51,34 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
         
         setupHorizontalCollectionView()
         setupVerticalCollectionView()
+        
+        NetworkingManager.shared.fetchSuggestedProducts { products in
+            DispatchQueue.main.async {
+                if let products = products {
+                    // Handle the fetched products here
+                    self.suggestedProducts = products
+                    self.horizontalCollectionView.reloadData()
+                    // print(products)
+                } else {
+                    // Handle the case where products couldn't be fetched
+                    print("Failed to fetch products")
+                }
+            }
+        }
+        
+        NetworkingManager.shared.fetchMainProducts { products in
+            DispatchQueue.main.async {
+                if let products = products {
+                    // Handle the fetched products here
+                    self.mainProducts = products
+                    self.verticalCollectionView.reloadData()
+                    // print(products)
+                } else {
+                    // Handle the case where products couldn't be fetched
+                    print("Failed to fetch products")
+                }
+            }
+        }
     }
 }
 
@@ -59,15 +92,11 @@ extension ProductListingViewController {
     
     private func setupHorizontalCollectionView() {
         // Create a layout for the horizontal collection view
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(100), heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(100))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 10
-            return section
-        }
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        // Set the item size to fit one item per column
+        layout.itemSize = CGSize(width: 100, height: 120) // Adjust width and height as needed
         
         // Initialize the horizontal collection view with the custom layout
         horizontalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -85,21 +114,31 @@ extension ProductListingViewController {
             horizontalCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             horizontalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             horizontalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            horizontalCollectionView.heightAnchor.constraint(equalToConstant: 120) // Adjust height as needed
+            horizontalCollectionView.heightAnchor.constraint(equalToConstant: 140) // Adjust height as needed
         ])
     }
     
     private func setupVerticalCollectionView() {
+        // Calculate the width of each item based on the available space and the number of items per row
+        let itemWidth = (view.bounds.width - 30) / 3  // Subtracting 30 to account for spacing between items
+        
         // Add the vertical collection view
         let verticalLayout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.33))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(itemWidth), heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            
+            // Set the spacing between items
+            item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
+            
+            // Calculate the group size based on the width of each item and the number of items per row
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)  // 3 items per row
+            
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 10
             return section
         }
+        
         verticalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: verticalLayout)
         verticalCollectionView.backgroundColor = .white
         verticalCollectionView.register(ProductCell.self, forCellWithReuseIdentifier: verticalCellIdentifier)
@@ -182,24 +221,52 @@ extension ProductListingViewController {
 
 extension ProductListingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10 // Return the number of items in the collection view
+        
+        if collectionView == horizontalCollectionView {
+            return suggestedProducts.count
+        } else {
+            return mainProducts.count
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == horizontalCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: horizontalCellIdentifier, for: indexPath) as! ProductCell
             
-            // Configure the cell with data (provide image, price, name, and attribute)
-            cell.configure(with: UIImage(named: "bag.jpeg"), price: "$10.99", name: "Product Name", attribute: "Product Attribute")
+            let currentProduct = suggestedProducts[indexPath.row]
+            
+            // Convert the imageURL string to URL
+            if let imageURL = URL(string: (currentProduct.imageURL ?? currentProduct.squareThumbnailURL) ?? "") {
+                // Configure the cell with Kingfisher
+                cell.configure(with: imageURL, price: currentProduct.priceText ?? "", name: currentProduct.name ?? "", attribute: currentProduct.shortDescription ?? "")
+            } else {
+                // Set a placeholder image if the imageURL string is invalid
+                cell.configure(with: nil, price: currentProduct.priceText ?? "", name: currentProduct.name ?? "", attribute: currentProduct.shortDescription ?? "")
+            }
+            
             
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: verticalCellIdentifier, for: indexPath) as! ProductCell
             
-            // Configure the cell with data (provide image, price, name, and attribute)
-            cell.configure(with: UIImage(named: "bag.jpeg"), price: "$10.99", name: "Product Name", attribute: "Product Attribute")
+            let currentProduct = mainProducts[indexPath.row]
+            
+            // Convert the imageURL string to URL
+            if let imageURL = URL(string: currentProduct.imageURL ?? "") {
+                // Configure the cell with Kingfisher
+                cell.configure(with: imageURL, price: currentProduct.priceText ?? "", name: currentProduct.name ?? "", attribute: currentProduct.attribute ?? "")
+            } else {
+                // Set a placeholder image if the imageURL string is invalid
+                cell.configure(with: nil, price: currentProduct.priceText ?? "", name: currentProduct.name ?? "", attribute: currentProduct.attribute ?? "")
+            }
+            
             
             return cell
         }
     }
+}
+
+extension ProductListingViewController: UICollectionViewDelegate {
+    
 }

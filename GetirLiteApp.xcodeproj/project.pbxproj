@@ -28,6 +28,7 @@
 		AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */; };
 		AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA82BCD54220018A223 /* SplashProtocols.swift */; };
 		AA927DAB2BCD5DE10018A223 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DAA2BCD5DE10018A223 /* Networking.swift */; };
+		AAF1EA712BCEC03900F5DA26 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = AAF1EA702BCEC03900F5DA26 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAF1EA712BCEC03900F5DA26 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,13 +131,13 @@
 		AA20C35E2BC7EF58000873F8 /* ProductListing */ = {
 			isa = PBXGroup;
 			children = (
+				AAF1EA722BCEC2B900F5DA26 /* Cell */,
 				AA927DA62BCD53470018A223 /* ProductListingProtocols.swift */,
 				AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */,
 				AA927D9E2BCD52F60018A223 /* ProductListingInteractor.swift */,
 				AA927DA02BCD53010018A223 /* ProductListingPresenter.swift */,
 				AA927DA42BCD532C0018A223 /* ProductListingEntity.swift */,
 				AA927DA22BCD53100018A223 /* ProductListingRouter.swift */,
-				AA62EB482BCEA14700656A1C /* ProductCell.swift */,
 			);
 			path = ProductListing;
 			sourceTree = "<group>";
@@ -184,6 +186,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		AAF1EA722BCEC2B900F5DA26 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				AA62EB482BCEA14700656A1C /* ProductCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -200,6 +210,9 @@
 			dependencies = (
 			);
 			name = GetirLiteApp;
+			packageProductDependencies = (
+				AAF1EA702BCEC03900F5DA26 /* Kingfisher */,
+			);
 			productName = GetirLiteApp;
 			productReference = AA20C3362BC7ECF7000873F8 /* GetirLiteApp.app */;
 			productType = "com.apple.product-type.application";
@@ -228,6 +241,9 @@
 				Base,
 			);
 			mainGroup = AA20C32D2BC7ECF7000873F8;
+			packageReferences = (
+				AAF1EA6F2BCEC03800F5DA26 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = AA20C3372BC7ECF7000873F8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -487,6 +503,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AAF1EA6F2BCEC03800F5DA26 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AAF1EA702BCEC03900F5DA26 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAF1EA6F2BCEC03800F5DA26 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AA20C32E2BC7ECF7000873F8 /* Project object */;
 }
