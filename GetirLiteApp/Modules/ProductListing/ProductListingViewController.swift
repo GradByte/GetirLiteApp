@@ -12,8 +12,6 @@ import Kingfisher
 final class ProductListingViewController: UIViewController, ProductListingViewControllerProtocol {
     
     private var collectionView: UICollectionView!
-    //    private var horizontalCollectionView: UICollectionView!
-    //    private var verticalCollectionView: UICollectionView!
     private let productCellIdentifier = "productCell"
     
     var suggestedProducts = [Product]()
@@ -59,7 +57,6 @@ extension ProductListingViewController {
             DispatchQueue.main.async {
                 if let products = products {
                     self.suggestedProducts = products
-                    //                    self.horizontalCollectionView.reloadData()
                     self.collectionView.reloadData()
                 } else {
                     print("Failed to fetch products")
@@ -71,7 +68,6 @@ extension ProductListingViewController {
             DispatchQueue.main.async {
                 if let products = products {
                     self.mainProducts = products
-                    //                    self.verticalCollectionView.reloadData()
                     self.collectionView.reloadData()
                 } else {
                     print("Failed to fetch products")
@@ -117,12 +113,12 @@ extension ProductListingViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 10
-        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.interGroupSpacing = 0
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10)
         
         // Ensure horizontal scrolling
         section.orthogonalScrollingBehavior = .continuous
@@ -140,12 +136,12 @@ extension ProductListingViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 10
-        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.interGroupSpacing = 0
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10)
         
         let backgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "background")
         backgroundDecoration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
@@ -189,18 +185,18 @@ extension ProductListingViewController {
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 36))
         
         // Create the bagView section
-        let bagView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 36))
+        let bagView = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 36))
         bagView.backgroundColor = .white
         // Create an image view
-        let imageView = UIImageView(frame: CGRect(x: (bagView.bounds.width - 15) / 2, y: (bagView.bounds.height - 15) / 2, width: 15, height: 15))
+        let imageView = UIImageView(frame: CGRect(x: (bagView.bounds.width - 32) / 2, y: (bagView.bounds.height - 32) / 2, width: 32, height: 32))
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "bag.jpeg")
+        imageView.image = UIImage(named: "bag1")
         // Add the image view as a subview of the white view
         bagView.addSubview(imageView)
         containerView.addSubview(bagView)
         
         // Create the billView section
-        let billView = UIView(frame: CGRect(x: 30, y: 0, width: 70, height: 36))
+        let billView = UIView(frame: CGRect(x: 36, y: 0, width: 64, height: 36))
         billView.backgroundColor = GetirColor.almostWhiteGray
         
         // Create a label for the current bill amount

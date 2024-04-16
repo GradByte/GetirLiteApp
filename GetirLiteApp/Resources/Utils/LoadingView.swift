@@ -28,8 +28,12 @@ class LoadingView {
     }
     
     func startLoading() {
-        UIApplication.shared.windows.first?.addSubview(blurView)
-        activityIndicator.startAnimating()
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let window = windowScene.windows.first {
+                window.addSubview(blurView)
+                activityIndicator.startAnimating()
+            }
+        }
     }
     
     func hideLoading() {

@@ -69,15 +69,18 @@ class ProductCell: UICollectionViewCell {
         let padding: CGFloat = 10
         
         // Calculate the available height for the subviews after adding padding
-        let availableHeight = contentView.bounds.height - padding * 2
+        // let availableHeight = contentView.bounds.height - padding * 2
         
-        // Set frames for subviews with padding
-        imageView.frame = CGRect(x: padding, y: padding, width: contentView.bounds.width - 2 * padding, height: availableHeight * 0.5)
+        // Set the imageView frame to be a square with side length equal to the available width
+        let imageViewSize = contentView.bounds.width - 2 * padding
+        imageView.frame = CGRect(x: padding, y: padding, width: imageViewSize, height: imageViewSize)
+        
         borderView.frame = imageView.frame.insetBy(dx: -1, dy: -1) // Make the borderView frame slightly larger than imageView
-        priceLabel.frame = CGRect(x: padding, y: availableHeight * 0.5 + padding, width: contentView.bounds.width - 2 * padding, height: 20)
-        nameLabel.frame = CGRect(x: padding, y: availableHeight * 0.5 + 20 + padding, width: contentView.bounds.width - 2 * padding, height: 20)
-        attributeLabel.frame = CGRect(x: padding, y: availableHeight * 0.5 + 40 + padding, width: contentView.bounds.width - 2 * padding, height: 20)
+        priceLabel.frame = CGRect(x: padding, y: imageView.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
+        nameLabel.frame = CGRect(x: padding, y: priceLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
+        attributeLabel.frame = CGRect(x: padding, y: nameLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
     }
+
     
     func configure(with imageURL: URL?, price: String, name: String, attribute: String) {
         if let imageURL = imageURL {
