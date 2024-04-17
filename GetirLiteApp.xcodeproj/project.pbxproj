@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA081F432BCFBBF10012E9CF /* LocalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F422BCFBBF10012E9CF /* LocalData.swift */; };
 		AA20C33A2BC7ECF7000873F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3392BC7ECF7000873F8 /* AppDelegate.swift */; };
 		AA20C33C2BC7ECF7000873F8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C33B2BC7ECF7000873F8 /* SceneDelegate.swift */; };
 		AA20C3432BC7ECF9000873F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA20C3422BC7ECF9000873F8 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA081F422BCFBBF10012E9CF /* LocalData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalData.swift; sourceTree = "<group>"; };
 		AA20C3362BC7ECF7000873F8 /* GetirLiteApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GetirLiteApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA20C3392BC7ECF7000873F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA20C33B2BC7ECF7000873F8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			children = (
 				AA20C3932BC838A5000873F8 /* Utils */,
 				AA927DAA2BCD5DE10018A223 /* Networking.swift */,
+				AA081F422BCFBBF10012E9CF /* LocalData.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 				AA20C38F2BC836FD000873F8 /* SplashRouter.swift in Sources */,
 				AA20C38D2BC836F6000873F8 /* SplashPresenter.swift in Sources */,
 				AA20C33A2BC7ECF7000873F8 /* AppDelegate.swift in Sources */,
+				AA081F432BCFBBF10012E9CF /* LocalData.swift in Sources */,
 				AA20C33C2BC7ECF7000873F8 /* SceneDelegate.swift in Sources */,
 				AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */,
 				AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */,

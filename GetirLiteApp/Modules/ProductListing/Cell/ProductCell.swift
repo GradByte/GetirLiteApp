@@ -15,6 +15,9 @@ class ProductCell: UICollectionViewCell {
     // Closure to handle the plus button tap event
     var plusButtonTappedHandler: (() -> Void)?
     
+    // Closure to handle the minus button tap event
+    var minusButtonTappedHandler: (() -> Void)?
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -70,8 +73,36 @@ class ProductCell: UICollectionViewCell {
         button.setImage(tintedPlusImage, for: .normal)
         
         button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-
-                
+        
+        return button
+    }()
+    
+    // Add a label below the plus button
+    var quantityLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = GetirColor.purple
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        return label
+    }()
+    
+    private let minusButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 3
+        button.layer.masksToBounds = false
+        
+        let minusImage = UIImage(systemName: "minus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
+        let tintedMinusImage = minusImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+        button.setImage(tintedMinusImage, for: .normal)
+        
+        button.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
+        
         return button
     }()
     
@@ -83,6 +114,8 @@ class ProductCell: UICollectionViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(attributeLabel)
         contentView.addSubview(addButton)
+        contentView.addSubview(quantityLabel)
+        contentView.addSubview(minusButton)
     }
     
     required init?(coder: NSCoder) {
@@ -111,10 +144,14 @@ class ProductCell: UICollectionViewCell {
         nameLabel.frame = CGRect(x: padding, y: priceLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
         attributeLabel.frame = CGRect(x: padding, y: nameLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
         addButton.frame = CGRect(x: contentView.bounds.width - padding - 20, y: padding - 12, width: 32, height: 32)
+        // Position the quantity label below the plus button
+        quantityLabel.frame = CGRect(x: contentView.bounds.width - padding - 20, y: addButton.frame.maxY, width: 32, height: 32)
+        // Position the minus button next to the quantity label
+        minusButton.frame = CGRect(x: contentView.bounds.width - padding - 20, y: quantityLabel.frame.maxY, width: 32, height: 32)
     }
     
     
-    func configure(id: String, with imageURL: URL?, price: String, name: String, attribute: String) {
+    func configure(id: String, with imageURL: URL?, price: String, name: String, attribute: String, numberOfAdded: Int?) {
         
         self.id = id
         
@@ -130,11 +167,37 @@ class ProductCell: UICollectionViewCell {
         priceLabel.text = price
         nameLabel.text = name
         attributeLabel.text = attribute
+        
+        
+        if let numberOfAdded = numberOfAdded {
+            // Set the text of the quantity label
+            quantityLabel.isHidden = numberOfAdded <= 0
+            quantityLabel.text = "\(numberOfAdded)"
+            
+            // Toggle the visibility of the minus button based on the quantity
+            minusButton.isHidden = numberOfAdded <= 0
+            
+            if minusButton.isHidden == false {
+                addButton.layer.cornerRadius = 10
+                addButton.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+                
+                minusButton.layer.cornerRadius = 10
+                minusButton.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+            } else {
+                addButton.layer.cornerRadius = 10
+                addButton.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+            }
+        }
+        
     }
     
     @objc private func plusButtonTapped() {
         // Change borderView color to purple
         plusButtonTappedHandler?()
-        // borderView.layer.borderColor = GetirColor.purple.cgColor
+    }
+    
+    @objc private func minusButtonTapped() {
+        // Call the minus button tapped handler
+        minusButtonTappedHandler?()
     }
 }
