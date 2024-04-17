@@ -31,11 +31,11 @@ final class ProductListingRouter {
 
 extension ProductListingRouter: ProductListingRouterProtocol {
     
-    func navigate(_ route: ProductListingRoutes, imageURL: String? = nil, name: String? = nil, price: String? = nil, attribute: String? = nil) {
+    func navigate(_ route: ProductListingRoutes, mainProduct: MainProduct? = nil, suggestedProduct: SuggestedProduct? = nil) {
         switch route {
         case .productDetail:
             guard let window = viewController?.view.window else { return }
-            let productDetailVC = ProductDetailRouter.createModule(imageURL: imageURL ?? "", name: name ?? "", price: price ?? "", attribute: attribute ?? "")
+            let productDetailVC = ProductDetailRouter.createModule(mainProduct: mainProduct, suggestedProduct: suggestedProduct)
             let navigationController = UINavigationController(rootViewController: productDetailVC)
             window.rootViewController = navigationController
         case .shoppingCart:

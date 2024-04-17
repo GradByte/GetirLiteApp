@@ -70,18 +70,27 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
     
     private let presenter: ProductDetailPresenter
     
-    private let imageURL: String
-    private let name: String
-    private let price: String
-    private let attribute: String
+    private var imageURL: String = ""
+    private var name: String = ""
+    private var price: String = ""
+    private var attribute: String = ""
     
-    init(presenter: ProductDetailPresenter, imageURL: String, name: String, price: String, attribute: String) {
+    init(presenter: ProductDetailPresenter, mainProduct: MainProduct? = nil, suggestedProduct: SuggestedProduct? = nil) {
         self.presenter = presenter
         
-        self.imageURL = imageURL
-        self.name = name
-        self.price = price
-        self.attribute = attribute
+        if let mainProduct = mainProduct {
+            self.imageURL = mainProduct.imageURL ?? ""
+            self.name = mainProduct.name ?? ""
+            self.price = mainProduct.priceText ?? "0"
+            self.attribute = mainProduct.attribute ?? ""
+        } 
+        
+        if let suggestedProduct = suggestedProduct {
+            self.imageURL = (suggestedProduct.imageURL ?? suggestedProduct.squareThumbnailURL) ?? ""
+            self.name = suggestedProduct.name ?? ""
+            self.price = suggestedProduct.priceText ?? "0"
+            self.attribute = suggestedProduct.shortDescription ?? ""
+        }
         
         super.init(nibName: nil, bundle: nil)
     }
