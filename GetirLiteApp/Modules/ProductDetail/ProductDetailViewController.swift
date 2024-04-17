@@ -59,17 +59,77 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
         return lineView
     }()
     
-    private let addButton: UIButton = {
+    private let defaultAddButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sepete Ekle", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 14)
         button.backgroundColor = GetirColor.purple
         button.layer.cornerRadius = 10
+        button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
+        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         return button
+    }()
+    
+    private let addButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 10
+        button.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 3
+        button.layer.masksToBounds = false
+        let plusImage = UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
+        let tintedPlusImage = plusImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+        button.setImage(tintedPlusImage, for: .normal)
+        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    // Add a label below the plus button
+    var quantityLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = GetirColor.purple
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        return label
+    }()
+    
+    private let minusButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 10
+        button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 3
+        button.layer.masksToBounds = false
+        
+        let minusImage = UIImage(systemName: "minus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
+        let tintedMinusImage = minusImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+        button.setImage(tintedMinusImage, for: .normal)
+        
+        button.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private var buttonStackView: UIStackView = {
+        let buttonStackView = UIStackView()
+        buttonStackView.axis = .horizontal
+        buttonStackView.spacing = 0
+        buttonStackView.alignment = .center
+        buttonStackView.distribution = .fillEqually
+        return buttonStackView
     }()
     
     private let presenter: ProductDetailPresenter
     
+    private var mainProduct: MainProduct? = nil
+    private var suggestedProduct: SuggestedProduct? = nil
     private var imageURL: String = ""
     private var name: String = ""
     private var price: String = ""
@@ -81,15 +141,17 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
         if let mainProduct = mainProduct {
             self.imageURL = mainProduct.imageURL ?? ""
             self.name = mainProduct.name ?? ""
-            self.price = mainProduct.priceText ?? "0"
-            self.attribute = mainProduct.attribute ?? ""
-        } 
+            self.price = mainProduct.priceText ?? "0.0"
+            self.attribute = (mainProduct.attribute ?? mainProduct.shortDescription) ?? "Ürün"
+            self.mainProduct = mainProduct
+        }
         
         if let suggestedProduct = suggestedProduct {
             self.imageURL = (suggestedProduct.imageURL ?? suggestedProduct.squareThumbnailURL) ?? ""
             self.name = suggestedProduct.name ?? ""
-            self.price = suggestedProduct.priceText ?? "0"
-            self.attribute = suggestedProduct.shortDescription ?? ""
+            self.price = suggestedProduct.priceText ?? "0.0"
+            self.attribute = suggestedProduct.shortDescription ?? "Ürün"
+            self.suggestedProduct = suggestedProduct
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -102,8 +164,9 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
-        setupNavigationBar()
         setupUI()
+        setupNavigationBar()
+        setupAddButton()
         setupContent()
     }
     
@@ -113,12 +176,10 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
 extension ProductDetailViewController {
     private func setupUI() {
         view.backgroundColor = .white
-        
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        addButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(containerView)
-        view.addSubview(addButton)
         view.addSubview(lineViewForButton)
+        view.addSubview(buttonStackView)
+        view.addSubview(defaultAddButton)
         
         containerView.addSubview(imageView)
         containerView.addSubview(nameLabel)
@@ -126,12 +187,30 @@ extension ProductDetailViewController {
         containerView.addSubview(attributeLabel)
         containerView.addSubview(lineView)
         
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         attributeLabel.translatesAutoresizingMaskIntoConstraints = false
         lineView.translatesAutoresizingMaskIntoConstraints = false
         lineViewForButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        defaultAddButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let buttonHeight: CGFloat = 50
+        minusButton.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        quantityLabel.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        
+        if quantityLabel.text == "1" {
+            let trashImage = UIImage(named: "purpleTrash")
+            let tintedTrashImage = trashImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+            minusButton.setImage(tintedTrashImage, for: .normal)
+        } else {
+            let minusImage = UIImage(systemName: "minus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
+            let tintedMinusImage = minusImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+            minusButton.setImage(tintedMinusImage, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -161,28 +240,68 @@ extension ProductDetailViewController {
             lineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             lineView.heightAnchor.constraint(equalToConstant: 3),
             
-            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            addButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            addButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            addButton.heightAnchor.constraint(equalToConstant: 50),
+            buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 120),
+            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120),
             
-            lineViewForButton.bottomAnchor.constraint(equalTo: addButton.topAnchor, constant: -25),
+            lineViewForButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
             lineViewForButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lineViewForButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            lineViewForButton.heightAnchor.constraint(equalToConstant: 3)
+            lineViewForButton.heightAnchor.constraint(equalToConstant: 3),
+            
+            defaultAddButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            defaultAddButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            defaultAddButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            defaultAddButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        
     }
     
-    private func setupContent() {
-        // Load image using Kingfisher
-        if let url = URL(string: imageURL) {
-            imageView.kf.setImage(with: url)
+    private func setupAddButton() {
+        
+        if let currentProduct = mainProduct {
+            if LocalData.shared.selectedMainProducts[currentProduct] == nil {
+                addButton.isHidden = true
+                quantityLabel.isHidden = true
+                minusButton.isHidden = true
+                buttonStackView.isHidden = true
+                defaultAddButton.isHidden = false
+            } else {
+                addButton.isHidden = false
+                quantityLabel.isHidden = false
+                minusButton.isHidden = false
+                buttonStackView.isHidden = false
+                defaultAddButton.isHidden = true
+                quantityLabel.text = ("\(LocalData.shared.selectedMainProducts[currentProduct] ?? 0)")
+            }
         }
         
-        // Set text for labels
-        nameLabel.text = name
-        priceLabel.text = price
-        attributeLabel.text = attribute
+        if let currentProduct = suggestedProduct {
+            if LocalData.shared.selectedSuggestedProducts[currentProduct] == nil {
+                addButton.isHidden = true
+                quantityLabel.isHidden = true
+                minusButton.isHidden = true
+                buttonStackView.isHidden = true
+                defaultAddButton.isHidden = false
+            } else {
+                addButton.isHidden = false
+                quantityLabel.isHidden = false
+                minusButton.isHidden = false
+                buttonStackView.isHidden = false
+                defaultAddButton.isHidden = true
+                quantityLabel.text = ("\(LocalData.shared.selectedSuggestedProducts[currentProduct] ?? 0)")
+            }
+        }
+        
+        buttonStackView.removeArrangedSubview(minusButton)
+        buttonStackView.removeArrangedSubview(quantityLabel)
+        buttonStackView.removeArrangedSubview(addButton)
+        buttonStackView.addArrangedSubview(minusButton)
+        buttonStackView.addArrangedSubview(quantityLabel)
+        buttonStackView.addArrangedSubview(addButton)
+        
+        setupUI()
+        setupNavigationBar()
     }
     
     private func setupNavigationBar() {
@@ -198,7 +317,6 @@ extension ProductDetailViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         title = "Ürün Detayı"
         
-        
         navigationItem.leftBarButtonItem = createCloseButton()
         if LocalData.shared.totalBill > 0.0 {
             navigationItem.rightBarButtonItem = navbarBasketButton()
@@ -206,30 +324,39 @@ extension ProductDetailViewController {
             navigationItem.rightBarButtonItem = UIBarButtonItem()
         }
     }
+}
+
+// MARK: - Data injection to UI elements
+extension ProductDetailViewController {
+    private func setupContent() {
+        if let url = URL(string: imageURL) {
+            imageView.kf.setImage(with: url)
+        }
+        nameLabel.text = name
+        priceLabel.text = price
+        attributeLabel.text = attribute
+    }
+}
+
+
+// MARK: - Navbar Items
+extension ProductDetailViewController {
     private func createCloseButton() -> UIBarButtonItem {
         let closeButton = UIButton(type: .custom)
         let xImage = UIImage(named: "x_button")
+        
         closeButton.setImage(xImage, for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-        
-        // Set the size of the button to match the image size
         closeButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        
-        // Wrap the button in a container view to add padding if needed
+
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         containerView.addSubview(closeButton)
         
-        // Create a UIBarButtonItem with the container view
         let closeBarButtonItem = UIBarButtonItem(customView: containerView)
         return closeBarButtonItem
     }
     
-    @objc func closeButtonTapped() {
-        self.presenter.routeToProductListing()
-    }
-    
     private func navbarBasketButton() -> UIBarButtonItem {
-        
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 36))
         
         let bagView = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 36))
@@ -248,7 +375,8 @@ extension ProductDetailViewController {
         let billLabel = UILabel(frame: billView.bounds)
         billLabel.textAlignment = .center
         billLabel.textColor = GetirColor.purple
-        billLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold) // Reduce font size to fit
+        billLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencySymbol = "₺"
@@ -257,9 +385,9 @@ extension ProductDetailViewController {
         if let formattedAmount = formatter.string(from: NSNumber(value: LocalData.shared.totalBill)) {
             billLabel.text = formattedAmount
         }
+        
         billView.addSubview(billLabel)
         containerView.addSubview(billView)
-        
         containerView.layer.cornerRadius = 10
         containerView.layer.masksToBounds = true
         
@@ -267,12 +395,79 @@ extension ProductDetailViewController {
         containerView.addGestureRecognizer(gesture)
         
         let customButton = UIBarButtonItem(customView: containerView)
-        
         return customButton
     }
+}
+
+
+// MARK: - Button actions
+extension ProductDetailViewController {
+    @objc private func plusButtonTapped() {
+        if let currentProduct = mainProduct {
+            LocalData.shared.totalBill += currentProduct.price ?? 0.0
+            if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
+                LocalData.shared.selectedMainProducts[currentProduct]! += 1
+            } else {
+                LocalData.shared.selectedMainProducts[currentProduct] = 1
+            }
+        }
+        
+        if let currentProduct = suggestedProduct {
+            LocalData.shared.totalBill += currentProduct.price ?? 0.0
+            if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
+                LocalData.shared.selectedSuggestedProducts[currentProduct]! += 1
+            } else {
+                LocalData.shared.selectedSuggestedProducts[currentProduct] = 1
+            }
+        }
+        
+        setupUI()
+        setupNavigationBar()
+        setupAddButton()
+    }
     
-    // Action for the navbarBasketButton
+    @objc private func minusButtonTapped() {
+        
+        if let currentProduct = mainProduct {
+            LocalData.shared.totalBill -= currentProduct.price ?? 0.0
+            if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
+                LocalData.shared.selectedMainProducts[currentProduct]! -= 1
+                if LocalData.shared.selectedMainProducts[currentProduct]! == 0 {
+                    LocalData.shared.selectedMainProducts.removeValue(forKey: currentProduct)
+                }
+            }
+        }
+        
+        if let currentProduct = suggestedProduct {
+            LocalData.shared.totalBill -= currentProduct.price ?? 0.0
+            if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
+                LocalData.shared.selectedSuggestedProducts[currentProduct]! -= 1
+                if LocalData.shared.selectedSuggestedProducts[currentProduct]! == 0 {
+                    LocalData.shared.selectedSuggestedProducts.removeValue(forKey: currentProduct)
+                    
+                }
+            }
+        }
+        
+        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+            LocalData.shared.totalBill = 0.0
+        }
+        
+        setupUI()
+        setupNavigationBar()
+        setupAddButton()
+    }
+}
+
+
+// MARK: - Navbar Button Actions
+extension ProductDetailViewController {
+    
     @objc private func navbarBasketButtonTapped() {
         self.presenter.routeToShoppingCart()
+    }
+    
+    @objc func closeButtonTapped() {
+        self.presenter.routeToProductListing()
     }
 }

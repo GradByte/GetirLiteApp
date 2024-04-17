@@ -37,22 +37,22 @@ class ProductCell: UICollectionViewCell {
     
     private let priceLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.textColor = GetirColor.purple
         return label
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
     private let attributeLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .gray
         return label
@@ -141,8 +141,8 @@ class ProductCell: UICollectionViewCell {
         
         borderView.frame = imageView.frame.insetBy(dx: -1, dy: -1) // Make the borderView frame slightly larger than imageView
         priceLabel.frame = CGRect(x: padding, y: imageView.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
-        nameLabel.frame = CGRect(x: padding, y: priceLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
-        attributeLabel.frame = CGRect(x: padding, y: nameLabel.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
+        nameLabel.frame = CGRect(x: padding, y: priceLabel.frame.maxY, width: contentView.bounds.width - 2 * padding, height: 20)
+        attributeLabel.frame = CGRect(x: padding, y: nameLabel.frame.maxY, width: contentView.bounds.width - 2 * padding, height: 20)
         addButton.frame = CGRect(x: contentView.bounds.width - padding - 20, y: padding - 12, width: 32, height: 32)
         // Position the quantity label below the plus button
         quantityLabel.frame = CGRect(x: contentView.bounds.width - padding - 20, y: addButton.frame.maxY, width: 32, height: 32)
@@ -164,9 +164,9 @@ class ProductCell: UICollectionViewCell {
             imageView.image = UIImage(named: "bag.jpeg")
         }
         
-        priceLabel.text = price
-        nameLabel.text = name
-        attributeLabel.text = attribute
+        priceLabel.text = price.trimmingCharacters(in: .whitespacesAndNewlines)
+        nameLabel.text = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        attributeLabel.text = attribute.trimmingCharacters(in: .whitespacesAndNewlines)
         
         
         if let numberOfAdded = numberOfAdded {
@@ -186,6 +186,16 @@ class ProductCell: UICollectionViewCell {
             } else {
                 addButton.layer.cornerRadius = 10
                 addButton.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+            }
+            
+            if numberOfAdded == 1 {
+                let trashImage = UIImage(named: "purpleTrash")
+                let tintedTrashImage = trashImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+                minusButton.setImage(tintedTrashImage, for: .normal)
+            } else {
+                let minusImage = UIImage(systemName: "minus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
+                let tintedMinusImage = minusImage?.withTintColor(GetirColor.purple, renderingMode: .alwaysOriginal)
+                minusButton.setImage(tintedMinusImage, for: .normal)
             }
         }
         

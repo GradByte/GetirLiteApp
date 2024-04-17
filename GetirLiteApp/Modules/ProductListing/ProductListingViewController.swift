@@ -363,6 +363,11 @@ extension ProductListingViewController: UICollectionViewDataSource {
             }
         }
         
+        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+            LocalData.shared.totalBill = 0.0
+            setupNavigationBar()
+        }
+        
         collectionView.reloadData()
     }
     
@@ -384,22 +389,27 @@ extension ProductListingViewController: UICollectionViewDataSource {
             }
         }
         
+        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+            LocalData.shared.totalBill = 0.0
+            setupNavigationBar()
+        }
+        
         collectionView.reloadData()
     }
     
     private func configureCellMainProduct(_ cell: ProductCell, with product: MainProduct) {
         if let imageURL = URL(string: product.imageURL ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
+            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: (product.attribute ?? product.shortDescription) ?? "Ürün", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
         } else {
-            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
+            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: (product.attribute ?? product.shortDescription) ?? "Ürün", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
         }
     }
     
     private func configureCellSuggestedProduct(_ cell: ProductCell, with product: SuggestedProduct) {
         if let imageURL = URL(string: (product.imageURL ?? product.squareThumbnailURL) ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
+            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: product.shortDescription ?? "Ürün", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
         } else {
-            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
+            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: product.shortDescription ?? "Ürün", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
         }
     }
 }
