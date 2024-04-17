@@ -47,10 +47,25 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
         return label
     }()
     
-    private var lineView: UIView = {
+    private let lineView: UIView = {
         let lineView = UIView()
         lineView.backgroundColor = GetirColor.almostWhiteGray
         return lineView
+    }()
+    
+    private let lineViewForButton: UIView = {
+        let lineView = UIView()
+        lineView.backgroundColor = GetirColor.almostWhiteGray
+        return lineView
+    }()
+    
+    private let addButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Sepete Ekle", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 14)
+        button.backgroundColor = GetirColor.purple
+        button.layer.cornerRadius = 10
+        return button
     }()
     
     private let presenter: ProductDetailPresenter
@@ -91,7 +106,10 @@ extension ProductDetailViewController {
         view.backgroundColor = .white
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        addButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(containerView)
+        view.addSubview(addButton)
+        view.addSubview(lineViewForButton)
         
         containerView.addSubview(imageView)
         containerView.addSubview(nameLabel)
@@ -104,6 +122,7 @@ extension ProductDetailViewController {
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         attributeLabel.translatesAutoresizingMaskIntoConstraints = false
         lineView.translatesAutoresizingMaskIntoConstraints = false
+        lineViewForButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -131,7 +150,17 @@ extension ProductDetailViewController {
             lineView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 20),
             lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            lineView.heightAnchor.constraint(equalToConstant: 2)
+            lineView.heightAnchor.constraint(equalToConstant: 3),
+            
+            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            addButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            addButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            addButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            lineViewForButton.bottomAnchor.constraint(equalTo: addButton.topAnchor, constant: -25),
+            lineViewForButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            lineViewForButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            lineViewForButton.heightAnchor.constraint(equalToConstant: 3)
         ])
     }
     
