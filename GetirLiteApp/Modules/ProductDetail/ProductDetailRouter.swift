@@ -16,12 +16,12 @@ final class ProductDetailRouter {
     
     weak var viewController: UIViewController?
     
-    static func createModule() -> ProductDetailViewController {
+    static func createModule(imageURL: String, name: String, price: String, attribute: String) -> ProductDetailViewController {
         
         let interactor = ProductDetailInteractor()
         let router = ProductDetailRouter()
         let presenter = ProductDetailPresenter( router: router, interactor: interactor)
-        let view = ProductDetailViewController(presenter: presenter)
+        let view = ProductDetailViewController(presenter: presenter, imageURL: imageURL, name: name, price: price, attribute: attribute)
         
         router.viewController = view
         interactor.output = presenter

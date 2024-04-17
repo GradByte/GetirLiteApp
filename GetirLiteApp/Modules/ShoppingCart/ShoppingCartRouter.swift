@@ -35,7 +35,9 @@ extension ShoppingCartRouter: ShoppingCartRouterProtocol {
         switch route {
         case .productDetail:
             guard let window = viewController?.view.window else { return }
-            let productDetailVC = ProductDetailRouter.createModule()
+            
+            //DONT FORGET TO CHANGE THIS!
+            let productDetailVC = ProductListingRouter.createModule()
             let navigationController = UINavigationController(rootViewController: productDetailVC)
             window.rootViewController = navigationController
         case .productListing:

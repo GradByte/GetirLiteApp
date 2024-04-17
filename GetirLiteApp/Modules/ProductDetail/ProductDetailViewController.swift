@@ -11,10 +11,62 @@ import Kingfisher
 
 final class ProductDetailViewController: UIViewController, ProductDetailViewControllerProtocol {
     
+    private let containerView: UIView = {
+        let containerView = UIView()
+        return containerView
+    }()
+    
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private let priceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.textColor = GetirColor.purple
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let attributeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 0
+        label.textColor = .gray
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private var lineView: UIView = {
+        let lineView = UIView()
+        lineView.backgroundColor = GetirColor.almostWhiteGray
+        return lineView
+    }()
+    
     private let presenter: ProductDetailPresenter
     
-    init(presenter: ProductDetailPresenter) {
+    private let imageURL: String
+    private let name: String
+    private let price: String
+    private let attribute: String
+    
+    init(presenter: ProductDetailPresenter, imageURL: String, name: String, price: String, attribute: String) {
         self.presenter = presenter
+        
+        self.imageURL = imageURL
+        self.name = name
+        self.price = price
+        self.attribute = attribute
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -27,11 +79,74 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
         setupNavigationBar()
+        setupUI()
+        setupContent()
     }
     
 }
 
+// MARK: - Setup UI elements
 extension ProductDetailViewController {
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(containerView)
+        
+        containerView.addSubview(imageView)
+        containerView.addSubview(nameLabel)
+        containerView.addSubview(priceLabel)
+        containerView.addSubview(attributeLabel)
+        containerView.addSubview(lineView)
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        attributeLabel.translatesAutoresizingMaskIntoConstraints = false
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            
+            priceLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            priceLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            priceLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            
+            nameLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 20),
+            nameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            
+            attributeLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            attributeLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            attributeLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            attributeLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            lineView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 20),
+            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            lineView.heightAnchor.constraint(equalToConstant: 2)
+        ])
+    }
+    
+    private func setupContent() {
+        // Load image using Kingfisher
+        if let url = URL(string: imageURL) {
+            imageView.kf.setImage(with: url)
+        }
+        
+        // Set text for labels
+        nameLabel.text = name
+        priceLabel.text = price
+        attributeLabel.text = attribute
+    }
+    
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -45,7 +160,7 @@ extension ProductDetailViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         title = "Ürün Detayı"
         
-
+        
         navigationItem.leftBarButtonItem = createCloseButton()
         if LocalData.shared.totalBill > 0.0 {
             navigationItem.rightBarButtonItem = navbarBasketButton()
@@ -81,11 +196,11 @@ extension ProductDetailViewController {
         
         let bagView = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 36))
         bagView.backgroundColor = .white
-
+        
         let imageView = UIImageView(frame: CGRect(x: (bagView.bounds.width - 32) / 2, y: (bagView.bounds.height - 32) / 2, width: 32, height: 32))
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "bag1")
-
+        
         bagView.addSubview(imageView)
         containerView.addSubview(bagView)
         

@@ -407,7 +407,15 @@ extension ProductListingViewController: UICollectionViewDataSource {
 // MARK: - CollectionView Delegate
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.presenter.routeToProductDetail()
+        if indexPath.section == 0 {
+            let newSuggest = suggestedProducts[indexPath.row]
+
+            self.presenter.routeToProductDetail(imageURL: (newSuggest.imageURL ?? newSuggest.squareThumbnailURL) ?? "", name: newSuggest.name ?? "", price: newSuggest.priceText ?? "0", attribute: newSuggest.shortDescription ?? "")
+        } else if indexPath.section == 1 {
+            let newMain = mainProducts[indexPath.row]
+            
+            self.presenter.routeToProductDetail(imageURL: newMain.imageURL ?? "", name: newMain.name ?? "", price: newMain.priceText ?? "0", attribute: (newMain.attribute ?? newMain.shortDescription) ?? "")
+        }
     }
 }
 
