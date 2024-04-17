@@ -14,8 +14,9 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
     private var collectionView: UICollectionView!
     private let productCellIdentifier = "productCell"
     
-    var suggestedProducts = [Product]()
-    var mainProducts = [ProductElement]()
+    //Populate these with API
+    var suggestedProducts = [SuggestedProduct]()
+    var mainProducts = [MainProduct]()
     
     private var label: UILabel = {
         let label = UILabel()
@@ -105,6 +106,7 @@ extension ProductListingViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: productCellIdentifier)
         collectionView.dataSource = self
+        collectionView.delegate = self
         view.addSubview(collectionView)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -196,25 +198,21 @@ extension ProductListingViewController {
     
     private func navbarBasketButton() -> UIBarButtonItem {
         
-        // Create a container view to hold the custom button
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 36))
         
-        // Create the bagView section
         let bagView = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 36))
         bagView.backgroundColor = .white
-        // Create an image view
+
         let imageView = UIImageView(frame: CGRect(x: (bagView.bounds.width - 32) / 2, y: (bagView.bounds.height - 32) / 2, width: 32, height: 32))
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "bag1")
-        // Add the image view as a subview of the white view
+
         bagView.addSubview(imageView)
         containerView.addSubview(bagView)
         
-        // Create the billView section
         let billView = UIView(frame: CGRect(x: 36, y: 0, width: 64, height: 36))
         billView.backgroundColor = GetirColor.almostWhiteGray
         
-        // Create a label for the current bill amount
         let billLabel = UILabel(frame: billView.bounds)
         billLabel.textAlignment = .center
         billLabel.textColor = GetirColor.purple
@@ -230,13 +228,20 @@ extension ProductListingViewController {
         billView.addSubview(billLabel)
         containerView.addSubview(billView)
         
-        // Container view corner radius
         containerView.layer.cornerRadius = 10
         containerView.layer.masksToBounds = true
         
-        // Create a bar button item with the container view
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.navbarBasketButtonTapped))
+        containerView.addGestureRecognizer(gesture)
+        
         let customButton = UIBarButtonItem(customView: containerView)
+        
         return customButton
+    }
+    
+    // Action for the navbarBasketButton
+    @objc private func navbarBasketButtonTapped() {
+        self.presenter.routeToShoppingCart()
     }
 }
 
@@ -261,7 +266,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
         
         if indexPath.section == 0 {
             let currentProduct = suggestedProducts[indexPath.item]
-            configureCellProduct(cell, with: currentProduct)
+            configureCellSuggestedProduct(cell, with: currentProduct)
             //check if cell needs to be highlighted
             //else condition isnt required because we have prepareForReuse in place
             if LocalData.shared.selectedSuggestedProducts[currentProduct] != nil {
@@ -280,7 +285,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
             
         } else if indexPath.section == 1 {
             let currentProduct = mainProducts[indexPath.item]
-            configureCellProductElement(cell, with: currentProduct)
+            configureCellMainProduct(cell, with: currentProduct)
             //check if cell needs to be highlighted
             //else condition isnt required because we have prepareForReuse in place
             if LocalData.shared.selectedMainProducts[currentProduct] != nil {
@@ -302,7 +307,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     // Function to handle the plus button tap event
-    func handlePlusButtonTapMain(cell: ProductCell, currentProduct: ProductElement) {
+    func handlePlusButtonTapMain(cell: ProductCell, currentProduct: MainProduct) {
         // Set the border color of the cell's borderView to purple
         // Perform any other actions related to the plus button tap if needed
         LocalData.shared.totalBill += currentProduct.price ?? 0.0
@@ -321,7 +326,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     // Function to handle the plus button tap event
-    func handlePlusButtonTapSuggested(cell: ProductCell, currentProduct: Product) {
+    func handlePlusButtonTapSuggested(cell: ProductCell, currentProduct: SuggestedProduct) {
         // Set the border color of the cell's borderView to purple
         cell.borderView.layer.borderColor = GetirColor.purple.cgColor
         // Perform any other actions related to the plus button tap if needed
@@ -341,7 +346,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     // Function to handle the mius button tap event
-    func handleMinusButtonTapMain(cell: ProductCell, currentProduct: ProductElement) {
+    func handleMinusButtonTapMain(cell: ProductCell, currentProduct: MainProduct) {
         // Set the border color of the cell's borderView to purple
         // Set the border color of the cell's borderView to purple
         // Perform any other actions related to the plus button tap if needed
@@ -358,12 +363,11 @@ extension ProductListingViewController: UICollectionViewDataSource {
             }
         }
         
-        print(LocalData.shared.selectedMainProducts)
         collectionView.reloadData()
     }
     
     // Function to handle the mius button tap event
-    func handleMinusButtonTapSuggested(cell: ProductCell, currentProduct: Product) {
+    func handleMinusButtonTapSuggested(cell: ProductCell, currentProduct: SuggestedProduct) {
         // Set the border color of the cell's borderView to purple
         // Set the border color of the cell's borderView to purple
         // Perform any other actions related to the plus button tap if needed
@@ -380,24 +384,30 @@ extension ProductListingViewController: UICollectionViewDataSource {
             }
         }
         
-        print(LocalData.shared.selectedSuggestedProducts)
         collectionView.reloadData()
     }
     
-    private func configureCellProduct(_ cell: ProductCell, with product: Product) {
+    private func configureCellMainProduct(_ cell: ProductCell, with product: MainProduct) {
+        if let imageURL = URL(string: product.imageURL ?? "") {
+            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
+        } else {
+            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
+        }
+    }
+    
+    private func configureCellSuggestedProduct(_ cell: ProductCell, with product: SuggestedProduct) {
         if let imageURL = URL(string: (product.imageURL ?? product.squareThumbnailURL) ?? "") {
             cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
         } else {
             cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.shortDescription ?? "", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
         }
     }
-    
-    private func configureCellProductElement(_ cell: ProductCell, with product: ProductElement) {
-        if let imageURL = URL(string: product.imageURL ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
-        } else {
-            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "", name: product.name ?? "", attribute: product.attribute ?? "", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
-        }
+}
+
+// MARK: - CollectionView Delegate
+extension ProductListingViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.presenter.routeToProductDetail()
     }
 }
 

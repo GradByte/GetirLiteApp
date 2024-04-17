@@ -7,34 +7,30 @@
 
 import Foundation
 
-// MARK: - Product
-struct MainProduct: Codable {
+// MARK: - MainProducts
+struct MainProducts: Codable {
     let id, name: String?
     let productCount: Int?
-    let products: [ProductElement]?
+    let products: [MainProduct]?
     let email, password: String?
 }
-
-// MARK: - ProductElement
-struct ProductElement: Codable, Hashable {
+// MARK: - MainProduct
+struct MainProduct: Codable, Hashable {
     let id, name, attribute: String?
     let thumbnailURL, imageURL: String?
     let price: Double?
     let priceText, shortDescription: String?
 }
 
-typealias Products = [MainProduct]
 
 
-
-// MARK: - SuggestedProduct
-struct SuggestedProduct: Codable {
-    let products: [Product]?
+// MARK: - SuggestedProducts
+struct SuggestedProducts: Codable {
+    let products: [SuggestedProduct]?
     let id, name: String?
 }
-
-// MARK: - Product
-struct Product: Codable, Hashable {
+// MARK: - SuggestedProduct
+struct SuggestedProduct: Codable, Hashable {
     let id: String?
     let imageURL: String?
     let price: Double?
@@ -43,5 +39,3 @@ struct Product: Codable, Hashable {
     let squareThumbnailURL: String?
     let status: Int?
 }
-
-typealias SuggestedProducts = [SuggestedProduct]

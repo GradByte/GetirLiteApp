@@ -10,7 +10,7 @@ import Foundation
 struct NetworkingManager {
     static let shared = NetworkingManager()
     
-    func fetchMainProducts(completion: @escaping ([ProductElement]?) -> Void) {
+    func fetchMainProducts(completion: @escaping ([MainProduct]?) -> Void) {
         guard let url = URL(string: "https://65c38b5339055e7482c12050.mockapi.io/api/products") else {
             print("Invalid URL")
             completion(nil)
@@ -26,7 +26,7 @@ struct NetworkingManager {
                         
             do {
                 let decoder = JSONDecoder()
-                let products = try decoder.decode([MainProduct].self, from: data)
+                let products = try decoder.decode([MainProducts].self, from: data)
                 completion(products[0].products)
             } catch {
                 print("Error decoding JSON: \(error)")
@@ -38,7 +38,7 @@ struct NetworkingManager {
     }
     
     
-    func fetchSuggestedProducts(completion: @escaping ([Product]?) -> Void) {
+    func fetchSuggestedProducts(completion: @escaping ([SuggestedProduct]?) -> Void) {
 
         guard let url = URL(string: "https://65c38b5339055e7482c12050.mockapi.io/api/suggestedProducts") else {
             print("Invalid URL")
@@ -55,7 +55,7 @@ struct NetworkingManager {
             
             do {
                 let decoder = JSONDecoder()
-                let suggestedProducts = try decoder.decode(SuggestedProducts.self, from: data)
+                let suggestedProducts = try decoder.decode([SuggestedProducts].self, from: data)
                 completion(suggestedProducts[0].products)
                 
             } catch {

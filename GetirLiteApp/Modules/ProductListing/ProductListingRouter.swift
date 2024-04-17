@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+enum ProductListingRoutes {
+    case productDetail, shoppingCart
+}
+
 final class ProductListingRouter {
     
     weak var viewController: UIViewController?
@@ -26,5 +30,20 @@ final class ProductListingRouter {
 }
 
 extension ProductListingRouter: ProductListingRouterProtocol {
+    
+    func navigate(_ route: ProductListingRoutes) {
+        switch route {
+        case .productDetail:
+            guard let window = viewController?.view.window else { return }
+            let productDetailVC = ProductDetailRouter.createModule()
+            let navigationController = UINavigationController(rootViewController: productDetailVC)
+            window.rootViewController = navigationController
+        case .shoppingCart:
+            guard let window = viewController?.view.window else { return }
+            let shoppingCartVC = ShoppingCartRouter.createModule()
+            let navigationController = UINavigationController(rootViewController: shoppingCartVC)
+            window.rootViewController = navigationController
+        }
+    }
     
 }

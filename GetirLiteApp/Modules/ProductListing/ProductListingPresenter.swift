@@ -24,6 +24,23 @@ final class ProductListingPresenter: ProductListingPresenterProtocol {
     
 }
 
+// MARK: - Route To Other Pages
+extension ProductListingPresenter {
+    func routeToProductDetail() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.router.navigate(.productDetail)
+        }
+    }
+    
+    func routeToShoppingCart() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.router.navigate(.shoppingCart)
+        }
+    }
+}
+
 extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
     
 }

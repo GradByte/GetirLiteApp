@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		AA081F432BCFBBF10012E9CF /* LocalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F422BCFBBF10012E9CF /* LocalData.swift */; };
+		AA081F452BCFD9D60012E9CF /* ProductDetailProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F442BCFD9D60012E9CF /* ProductDetailProtocols.swift */; };
+		AA081F472BCFDA1B0012E9CF /* ProductDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F462BCFDA1B0012E9CF /* ProductDetailViewController.swift */; };
+		AA081F492BCFDA300012E9CF /* ProductDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F482BCFDA300012E9CF /* ProductDetailInteractor.swift */; };
+		AA081F4B2BCFDA3B0012E9CF /* ProductDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F4A2BCFDA3B0012E9CF /* ProductDetailPresenter.swift */; };
+		AA081F4D2BCFDA440012E9CF /* ProductDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F4C2BCFDA440012E9CF /* ProductDetailRouter.swift */; };
+		AA081F4F2BCFDBFF0012E9CF /* ShoppingCartProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F4E2BCFDBFF0012E9CF /* ShoppingCartProtocols.swift */; };
+		AA081F512BCFDC2D0012E9CF /* ShoppingCartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F502BCFDC2D0012E9CF /* ShoppingCartViewController.swift */; };
+		AA081F532BCFDC510012E9CF /* ShoppingCartInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F522BCFDC510012E9CF /* ShoppingCartInteractor.swift */; };
+		AA081F552BCFDC6A0012E9CF /* ShoppingCartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F542BCFDC6A0012E9CF /* ShoppingCartPresenter.swift */; };
+		AA081F572BCFDC9C0012E9CF /* ShoppingCartRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA081F562BCFDC9C0012E9CF /* ShoppingCartRouter.swift */; };
 		AA20C33A2BC7ECF7000873F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3392BC7ECF7000873F8 /* AppDelegate.swift */; };
 		AA20C33C2BC7ECF7000873F8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C33B2BC7ECF7000873F8 /* SceneDelegate.swift */; };
 		AA20C3432BC7ECF9000873F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA20C3422BC7ECF9000873F8 /* Assets.xcassets */; };
@@ -34,6 +44,16 @@
 
 /* Begin PBXFileReference section */
 		AA081F422BCFBBF10012E9CF /* LocalData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalData.swift; sourceTree = "<group>"; };
+		AA081F442BCFD9D60012E9CF /* ProductDetailProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailProtocols.swift; sourceTree = "<group>"; };
+		AA081F462BCFDA1B0012E9CF /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
+		AA081F482BCFDA300012E9CF /* ProductDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailInteractor.swift; sourceTree = "<group>"; };
+		AA081F4A2BCFDA3B0012E9CF /* ProductDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailPresenter.swift; sourceTree = "<group>"; };
+		AA081F4C2BCFDA440012E9CF /* ProductDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailRouter.swift; sourceTree = "<group>"; };
+		AA081F4E2BCFDBFF0012E9CF /* ShoppingCartProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartProtocols.swift; sourceTree = "<group>"; };
+		AA081F502BCFDC2D0012E9CF /* ShoppingCartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartViewController.swift; sourceTree = "<group>"; };
+		AA081F522BCFDC510012E9CF /* ShoppingCartInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartInteractor.swift; sourceTree = "<group>"; };
+		AA081F542BCFDC6A0012E9CF /* ShoppingCartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartPresenter.swift; sourceTree = "<group>"; };
+		AA081F562BCFDC9C0012E9CF /* ShoppingCartRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartRouter.swift; sourceTree = "<group>"; };
 		AA20C3362BC7ECF7000873F8 /* GetirLiteApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GetirLiteApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA20C3392BC7ECF7000873F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA20C33B2BC7ECF7000873F8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +168,11 @@
 		AA20C35F2BC7EFAE000873F8 /* ProductDetail */ = {
 			isa = PBXGroup;
 			children = (
+				AA081F442BCFD9D60012E9CF /* ProductDetailProtocols.swift */,
+				AA081F462BCFDA1B0012E9CF /* ProductDetailViewController.swift */,
+				AA081F482BCFDA300012E9CF /* ProductDetailInteractor.swift */,
+				AA081F4A2BCFDA3B0012E9CF /* ProductDetailPresenter.swift */,
+				AA081F4C2BCFDA440012E9CF /* ProductDetailRouter.swift */,
 			);
 			path = ProductDetail;
 			sourceTree = "<group>";
@@ -155,6 +180,11 @@
 		AA20C36E2BC7EFD7000873F8 /* ShoppingCart */ = {
 			isa = PBXGroup;
 			children = (
+				AA081F4E2BCFDBFF0012E9CF /* ShoppingCartProtocols.swift */,
+				AA081F502BCFDC2D0012E9CF /* ShoppingCartViewController.swift */,
+				AA081F522BCFDC510012E9CF /* ShoppingCartInteractor.swift */,
+				AA081F542BCFDC6A0012E9CF /* ShoppingCartPresenter.swift */,
+				AA081F562BCFDC9C0012E9CF /* ShoppingCartRouter.swift */,
 			);
 			path = ShoppingCart;
 			sourceTree = "<group>";
@@ -277,21 +307,31 @@
 				AA20C3972BC838DE000873F8 /* LoadingShowable.swift in Sources */,
 				AA927DAB2BCD5DE10018A223 /* Networking.swift in Sources */,
 				AA927DA32BCD53100018A223 /* ProductListingRouter.swift in Sources */,
+				AA081F532BCFDC510012E9CF /* ShoppingCartInteractor.swift in Sources */,
 				AA927D9F2BCD52F60018A223 /* ProductListingInteractor.swift in Sources */,
+				AA081F4F2BCFDBFF0012E9CF /* ShoppingCartProtocols.swift in Sources */,
 				AA927D9D2BCD52E80018A223 /* ProductListingViewController.swift in Sources */,
 				AA927DA12BCD53010018A223 /* ProductListingPresenter.swift in Sources */,
+				AA081F472BCFDA1B0012E9CF /* ProductDetailViewController.swift in Sources */,
+				AA081F572BCFDC9C0012E9CF /* ShoppingCartRouter.swift in Sources */,
 				AA20C3892BC836D4000873F8 /* SplashViewController.swift in Sources */,
 				AA20C38F2BC836FD000873F8 /* SplashRouter.swift in Sources */,
+				AA081F512BCFDC2D0012E9CF /* ShoppingCartViewController.swift in Sources */,
 				AA20C38D2BC836F6000873F8 /* SplashPresenter.swift in Sources */,
 				AA20C33A2BC7ECF7000873F8 /* AppDelegate.swift in Sources */,
+				AA081F4D2BCFDA440012E9CF /* ProductDetailRouter.swift in Sources */,
 				AA081F432BCFBBF10012E9CF /* LocalData.swift in Sources */,
 				AA20C33C2BC7ECF7000873F8 /* SceneDelegate.swift in Sources */,
 				AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */,
 				AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */,
+				AA081F552BCFDC6A0012E9CF /* ShoppingCartPresenter.swift in Sources */,
 				AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */,
+				AA081F492BCFDA300012E9CF /* ProductDetailInteractor.swift in Sources */,
 				AA62EB492BCEA14700656A1C /* ProductCell.swift in Sources */,
+				AA081F4B2BCFDA3B0012E9CF /* ProductDetailPresenter.swift in Sources */,
 				AA20C38B2BC836E5000873F8 /* SplashInteractor.swift in Sources */,
 				AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */,
+				AA081F452BCFD9D60012E9CF /* ProductDetailProtocols.swift in Sources */,
 				AA62EB472BCE890500656A1C /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
