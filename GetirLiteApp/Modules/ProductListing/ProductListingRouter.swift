@@ -37,12 +37,16 @@ extension ProductListingRouter: ProductListingRouterProtocol {
             guard let window = viewController?.view.window else { return }
             let productDetailVC = ProductDetailRouter.createModule(product: product)
             let navigationController = UINavigationController(rootViewController: productDetailVC)
-            window.rootViewController = navigationController
+            UIView.transition(with: window, duration: 0.5, options: .curveEaseInOut, animations: {
+                        window.rootViewController = navigationController
+                    }, completion: nil)
         case .shoppingCart:
             guard let window = viewController?.view.window else { return }
             let shoppingCartVC = ShoppingCartRouter.createModule()
             let navigationController = UINavigationController(rootViewController: shoppingCartVC)
-            window.rootViewController = navigationController
+            UIView.transition(with: window, duration: 0.5, options: .curveEaseInOut, animations: {
+                        window.rootViewController = navigationController
+                    }, completion: nil)
         }
     }
     

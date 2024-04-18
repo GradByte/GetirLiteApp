@@ -31,20 +31,22 @@ final class ShoppingCartRouter {
 
 extension ShoppingCartRouter: ShoppingCartRouterProtocol {
     
-    func navigate(_ route: ShoppingCartRoutes) {
+    func navigate(_ route: ShoppingCartRoutes, product: Product) {
         switch route {
         case .productDetail:
             guard let window = viewController?.view.window else { return }
-            
-            //DONT FORGET TO CHANGE THIS!
-            let productDetailVC = ProductListingRouter.createModule()
+            let productDetailVC = ProductDetailRouter.createModule(product: product)
             let navigationController = UINavigationController(rootViewController: productDetailVC)
-            window.rootViewController = navigationController
+            UIView.transition(with: window, duration: 0.5, options: .curveEaseInOut, animations: {
+                        window.rootViewController = navigationController
+                    }, completion: nil)
         case .productListing:
             guard let window = viewController?.view.window else { return }
             let productListingVC = ProductListingRouter.createModule()
             let navigationController = UINavigationController(rootViewController: productListingVC)
-            window.rootViewController = navigationController
+            UIView.transition(with: window, duration: 0.5, options: .transitionCurlUp, animations: {
+                        window.rootViewController = navigationController
+                    }, completion: nil)
         }
     }
     

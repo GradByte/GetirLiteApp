@@ -66,26 +66,32 @@ extension ProductListingViewController {
     }
     
     private func fetchData() {
-        NetworkingManager.shared.fetchSuggestedProducts { products in
-            DispatchQueue.main.async {
-                if let products = products {
-                    self.suggestedProducts = products
-                    self.collectionView.reloadData()
-                } else {
-                    print("Failed to fetch products")
+        if LocalData.shared.downloadedMainProducts.isEmpty && LocalData.shared.downloadedSuggestedProducts.isEmpty {
+            NetworkingManager.shared.fetchSuggestedProducts { products in
+                DispatchQueue.main.async {
+                    if let products = products {
+                        self.suggestedProducts = products
+                        LocalData.shared.downloadedSuggestedProducts = products
+                        self.collectionView.reloadData()
+                    } else {
+                        print("Failed to fetch products")
+                    }
                 }
             }
-        }
-        
-        NetworkingManager.shared.fetchMainProducts { products in
-            DispatchQueue.main.async {
-                if let products = products {
-                    self.mainProducts = products
-                    self.collectionView.reloadData()
-                } else {
-                    print("Failed to fetch products")
+            NetworkingManager.shared.fetchMainProducts { products in
+                DispatchQueue.main.async {
+                    if let products = products {
+                        self.mainProducts = products
+                        LocalData.shared.downloadedMainProducts = products
+                        self.collectionView.reloadData()
+                    } else {
+                        print("Failed to fetch products")
+                    }
                 }
             }
+        } else {
+            self.suggestedProducts = LocalData.shared.downloadedSuggestedProducts
+            self.mainProducts = LocalData.shared.downloadedMainProducts
         }
     }
     

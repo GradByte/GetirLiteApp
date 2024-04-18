@@ -10,14 +10,8 @@ import Foundation
 class LocalData {
     static let shared = LocalData()
     
-    // IDs and count of selected products
-    // var selectedProducts = [String: Int]()
-    
-    // Main products (vertical collection)
-    //var selectedMainProducts = [MainProduct:Int]()
-    
-    // Suggested products (horizontal collection)
-    //var selectedSuggestedProducts = [SuggestedProduct:Int]()
+    var downloadedMainProducts = [MainProduct]()
+    var downloadedSuggestedProducts = [SuggestedProduct]()
     
     var selectedProducts = [Product:Int]()
     
