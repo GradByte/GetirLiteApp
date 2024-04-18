@@ -164,7 +164,20 @@ class ProductCell: UICollectionViewCell {
             imageView.image = UIImage(named: "bag.jpeg")
         }
         
-        priceLabel.text = price.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        var formattedPrice: String? {
+            guard let priceDouble = Double(price) else { return nil }
+                
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencySymbol = "₺"
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+                
+            return formatter.string(from: NSNumber(value: priceDouble))
+        }
+        
+        priceLabel.text = formattedPrice ?? "₺0.00"
         nameLabel.text = name.trimmingCharacters(in: .whitespacesAndNewlines)
         attributeLabel.text = attribute.trimmingCharacters(in: .whitespacesAndNewlines)
         

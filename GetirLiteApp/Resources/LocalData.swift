@@ -14,10 +14,12 @@ class LocalData {
     // var selectedProducts = [String: Int]()
     
     // Main products (vertical collection)
-    var selectedMainProducts = [MainProduct:Int]()
+    //var selectedMainProducts = [MainProduct:Int]()
     
     // Suggested products (horizontal collection)
-    var selectedSuggestedProducts = [SuggestedProduct:Int]()
+    //var selectedSuggestedProducts = [SuggestedProduct:Int]()
+    
+    var selectedProducts = [Product:Int]()
     
     // Total bill
     var totalBill: Double {

@@ -128,31 +128,35 @@ final class ProductDetailViewController: UIViewController, ProductDetailViewCont
     
     private let presenter: ProductDetailPresenter
     
-    private var mainProduct: MainProduct? = nil
-    private var suggestedProduct: SuggestedProduct? = nil
+    private var product: Product? = nil
     private var imageURL: String = ""
     private var name: String = ""
     private var price: String = ""
     private var attribute: String = ""
     
-    init(presenter: ProductDetailPresenter, mainProduct: MainProduct? = nil, suggestedProduct: SuggestedProduct? = nil) {
+    init(presenter: ProductDetailPresenter, product: Product) {
         self.presenter = presenter
         
-        if let mainProduct = mainProduct {
-            self.imageURL = mainProduct.imageURL ?? ""
-            self.name = mainProduct.name ?? ""
-            self.price = mainProduct.priceText ?? "0.0"
-            self.attribute = (mainProduct.attribute ?? mainProduct.shortDescription) ?? "Ürün"
-            self.mainProduct = mainProduct
+        self.imageURL = product.imageURLString ?? ""
+        self.name = product.name ?? "Ürün İsmi"
+        
+        
+        var formattedPrice: String? {
+            guard let priceString = product.price else { return nil }
+                
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencySymbol = "₺"
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+                
+            return formatter.string(from: NSNumber(value: priceString))
         }
         
-        if let suggestedProduct = suggestedProduct {
-            self.imageURL = (suggestedProduct.imageURL ?? suggestedProduct.squareThumbnailURL) ?? ""
-            self.name = suggestedProduct.name ?? ""
-            self.price = suggestedProduct.priceText ?? "0.0"
-            self.attribute = suggestedProduct.shortDescription ?? "Ürün"
-            self.suggestedProduct = suggestedProduct
-        }
+        self.price = formattedPrice ?? "₺0.00"
+        
+        self.attribute = product.attributeString ?? "Ürün"
+        self.product = product
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -259,8 +263,8 @@ extension ProductDetailViewController {
     
     private func setupAddButton() {
         
-        if let currentProduct = mainProduct {
-            if LocalData.shared.selectedMainProducts[currentProduct] == nil {
+        if let currentProduct = product {
+            if LocalData.shared.selectedProducts[currentProduct] == nil {
                 addButton.isHidden = true
                 quantityLabel.isHidden = true
                 minusButton.isHidden = true
@@ -272,24 +276,7 @@ extension ProductDetailViewController {
                 minusButton.isHidden = false
                 buttonStackView.isHidden = false
                 defaultAddButton.isHidden = true
-                quantityLabel.text = ("\(LocalData.shared.selectedMainProducts[currentProduct] ?? 0)")
-            }
-        }
-        
-        if let currentProduct = suggestedProduct {
-            if LocalData.shared.selectedSuggestedProducts[currentProduct] == nil {
-                addButton.isHidden = true
-                quantityLabel.isHidden = true
-                minusButton.isHidden = true
-                buttonStackView.isHidden = true
-                defaultAddButton.isHidden = false
-            } else {
-                addButton.isHidden = false
-                quantityLabel.isHidden = false
-                minusButton.isHidden = false
-                buttonStackView.isHidden = false
-                defaultAddButton.isHidden = true
-                quantityLabel.text = ("\(LocalData.shared.selectedSuggestedProducts[currentProduct] ?? 0)")
+                quantityLabel.text = ("\(LocalData.shared.selectedProducts[currentProduct] ?? 0)")
             }
         }
         
@@ -403,21 +390,12 @@ extension ProductDetailViewController {
 // MARK: - Button actions
 extension ProductDetailViewController {
     @objc private func plusButtonTapped() {
-        if let currentProduct = mainProduct {
+        if let currentProduct = product {
             LocalData.shared.totalBill += currentProduct.price ?? 0.0
-            if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
-                LocalData.shared.selectedMainProducts[currentProduct]! += 1
+            if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+                LocalData.shared.selectedProducts[currentProduct]! += 1
             } else {
-                LocalData.shared.selectedMainProducts[currentProduct] = 1
-            }
-        }
-        
-        if let currentProduct = suggestedProduct {
-            LocalData.shared.totalBill += currentProduct.price ?? 0.0
-            if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
-                LocalData.shared.selectedSuggestedProducts[currentProduct]! += 1
-            } else {
-                LocalData.shared.selectedSuggestedProducts[currentProduct] = 1
+                LocalData.shared.selectedProducts[currentProduct] = 1
             }
         }
         
@@ -428,28 +406,17 @@ extension ProductDetailViewController {
     
     @objc private func minusButtonTapped() {
         
-        if let currentProduct = mainProduct {
+        if let currentProduct = product {
             LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-            if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
-                LocalData.shared.selectedMainProducts[currentProduct]! -= 1
-                if LocalData.shared.selectedMainProducts[currentProduct]! == 0 {
-                    LocalData.shared.selectedMainProducts.removeValue(forKey: currentProduct)
+            if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+                LocalData.shared.selectedProducts[currentProduct]! -= 1
+                if LocalData.shared.selectedProducts[currentProduct]! == 0 {
+                    LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
                 }
             }
         }
         
-        if let currentProduct = suggestedProduct {
-            LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-            if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
-                LocalData.shared.selectedSuggestedProducts[currentProduct]! -= 1
-                if LocalData.shared.selectedSuggestedProducts[currentProduct]! == 0 {
-                    LocalData.shared.selectedSuggestedProducts.removeValue(forKey: currentProduct)
-                    
-                }
-            }
-        }
-        
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+        if LocalData.shared.selectedProducts.isEmpty {
             LocalData.shared.totalBill = 0.0
         }
         

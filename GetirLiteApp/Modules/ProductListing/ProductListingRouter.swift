@@ -31,11 +31,11 @@ final class ProductListingRouter {
 
 extension ProductListingRouter: ProductListingRouterProtocol {
     
-    func navigate(_ route: ProductListingRoutes, mainProduct: MainProduct? = nil, suggestedProduct: SuggestedProduct? = nil) {
+    func navigate(_ route: ProductListingRoutes, product: Product) {
         switch route {
         case .productDetail:
             guard let window = viewController?.view.window else { return }
-            let productDetailVC = ProductDetailRouter.createModule(mainProduct: mainProduct, suggestedProduct: suggestedProduct)
+            let productDetailVC = ProductDetailRouter.createModule(product: product)
             let navigationController = UINavigationController(rootViewController: productDetailVC)
             window.rootViewController = navigationController
         case .shoppingCart:

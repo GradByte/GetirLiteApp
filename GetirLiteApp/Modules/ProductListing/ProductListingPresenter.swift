@@ -26,17 +26,17 @@ final class ProductListingPresenter: ProductListingPresenterProtocol {
 
 // MARK: - Route To Other Pages
 extension ProductListingPresenter {
-    func routeToProductDetail(mainProduct: MainProduct? = nil, suggestedProduct: SuggestedProduct? = nil) {
+    func routeToProductDetail(product: Product) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.router.navigate(.productDetail, mainProduct: mainProduct, suggestedProduct: suggestedProduct)
+            self.router.navigate(.productDetail, product: product)
         }
     }
     
-    func routeToShoppingCart() {
+    func routeToShoppingCart(product: Product) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.router.navigate(.shoppingCart)
+            self.router.navigate(.shoppingCart, product: product)
         }
     }
 }

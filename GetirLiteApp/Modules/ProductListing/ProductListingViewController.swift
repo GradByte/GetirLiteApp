@@ -241,7 +241,7 @@ extension ProductListingViewController {
     
     // Action for the navbarBasketButton
     @objc private func navbarBasketButtonTapped() {
-        self.presenter.routeToShoppingCart()
+        self.presenter.routeToShoppingCart(product: Product.dummy)
     }
 }
 
@@ -265,41 +265,41 @@ extension ProductListingViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: productCellIdentifier, for: indexPath) as! ProductCell
         
         if indexPath.section == 0 {
-            let currentProduct = suggestedProducts[indexPath.item]
-            configureCellSuggestedProduct(cell, with: currentProduct)
+            let currentProduct = Product(suggestedProduct: suggestedProducts[indexPath.item])
+            configureCell(cell, with: currentProduct)
             //check if cell needs to be highlighted
             //else condition isnt required because we have prepareForReuse in place
-            if LocalData.shared.selectedSuggestedProducts[currentProduct] != nil {
+            if LocalData.shared.selectedProducts[currentProduct] != nil {
                 cell.borderView.layer.borderColor = GetirColor.purple.cgColor
             }
             
             cell.plusButtonTappedHandler = { [weak cell] in
                 guard let cell = cell else { return }
-                self.handlePlusButtonTapSuggested(cell: cell, currentProduct: currentProduct)
+                self.handlePlusButtonTap(cell: cell, currentProduct: currentProduct)
             }
             
             cell.minusButtonTappedHandler = { [weak cell] in
                 guard let cell = cell else { return }
-                self.handleMinusButtonTapSuggested(cell: cell, currentProduct: currentProduct)
+                self.handleMinusButtonTap(cell: cell, currentProduct: currentProduct)
             }
             
         } else if indexPath.section == 1 {
-            let currentProduct = mainProducts[indexPath.item]
-            configureCellMainProduct(cell, with: currentProduct)
+            let currentProduct = Product(mainProduct: mainProducts[indexPath.item])
+            configureCell(cell, with: currentProduct)
             //check if cell needs to be highlighted
             //else condition isnt required because we have prepareForReuse in place
-            if LocalData.shared.selectedMainProducts[currentProduct] != nil {
+            if LocalData.shared.selectedProducts[currentProduct] != nil {
                 cell.borderView.layer.borderColor = GetirColor.purple.cgColor
             }
             
             cell.plusButtonTappedHandler = { [weak cell] in
                 guard let cell = cell else { return }
-                self.handlePlusButtonTapMain(cell: cell, currentProduct: currentProduct)
+                self.handlePlusButtonTap(cell: cell, currentProduct: currentProduct)
             }
             
             cell.minusButtonTappedHandler = { [weak cell] in
                 guard let cell = cell else { return }
-                self.handleMinusButtonTapMain(cell: cell, currentProduct: currentProduct)
+                self.handleMinusButtonTap(cell: cell, currentProduct: currentProduct)
             }
         }
         
@@ -307,63 +307,43 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     // Function to handle the plus button tap event
-    func handlePlusButtonTapMain(cell: ProductCell, currentProduct: MainProduct) {
-        // Set the border color of the cell's borderView to purple
-        // Perform any other actions related to the plus button tap if needed
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
-            LocalData.shared.selectedMainProducts[currentProduct]! += 1
-        } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedMainProducts[currentProduct] = 1
-        }
-        
-        collectionView.reloadData()
-    }
-    
-    // Function to handle the plus button tap event
-    func handlePlusButtonTapSuggested(cell: ProductCell, currentProduct: SuggestedProduct) {
+    func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
         // Set the border color of the cell's borderView to purple
         cell.borderView.layer.borderColor = GetirColor.purple.cgColor
         // Perform any other actions related to the plus button tap if needed
+        
         LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+        if LocalData.shared.selectedProducts.isEmpty {
             setupNavigationBar()
         }
         
-        if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedSuggestedProducts[currentProduct]! += 1
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! += 1
         } else {
             cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedSuggestedProducts[currentProduct] = 1
+            LocalData.shared.selectedProducts[currentProduct] = 1
         }
         
         collectionView.reloadData()
     }
     
     // Function to handle the mius button tap event
-    func handleMinusButtonTapMain(cell: ProductCell, currentProduct: MainProduct) {
-        // Set the border color of the cell's borderView to purple
-        // Set the border color of the cell's borderView to purple
-        // Perform any other actions related to the plus button tap if needed
+    func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
+        
         LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+        if LocalData.shared.selectedProducts.isEmpty {
             setupNavigationBar()
         }
         
-        if (LocalData.shared.selectedMainProducts[currentProduct] != nil) {
-            LocalData.shared.selectedMainProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedMainProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedMainProducts.removeValue(forKey: currentProduct)
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! -= 1
+            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
+                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
                 cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
             }
         }
         
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
+        if LocalData.shared.selectedProducts.isEmpty {
             LocalData.shared.totalBill = 0.0
             setupNavigationBar()
         }
@@ -371,45 +351,10 @@ extension ProductListingViewController: UICollectionViewDataSource {
         collectionView.reloadData()
     }
     
-    // Function to handle the mius button tap event
-    func handleMinusButtonTapSuggested(cell: ProductCell, currentProduct: SuggestedProduct) {
-        // Set the border color of the cell's borderView to purple
-        // Set the border color of the cell's borderView to purple
-        // Perform any other actions related to the plus button tap if needed
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
-            setupNavigationBar()
-        }
+    private func configureCell(_ cell: ProductCell, with product: Product) {
         
-        if (LocalData.shared.selectedSuggestedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedSuggestedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedSuggestedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedSuggestedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedMainProducts.isEmpty && LocalData.shared.selectedSuggestedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        collectionView.reloadData()
-    }
-    
-    private func configureCellMainProduct(_ cell: ProductCell, with product: MainProduct) {
-        if let imageURL = URL(string: product.imageURL ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: (product.attribute ?? product.shortDescription) ?? "Ürün", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
-        } else {
-            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: (product.attribute ?? product.shortDescription) ?? "Ürün", numberOfAdded: LocalData.shared.selectedMainProducts[product] ?? 0)
-        }
-    }
-    
-    private func configureCellSuggestedProduct(_ cell: ProductCell, with product: SuggestedProduct) {
-        if let imageURL = URL(string: (product.imageURL ?? product.squareThumbnailURL) ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: product.shortDescription ?? "Ürün", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
-        } else {
-            cell.configure(id: product.id ?? "", with: nil, price: product.priceText ?? "0.0", name: product.name ?? "", attribute: product.shortDescription ?? "Ürün", numberOfAdded: LocalData.shared.selectedSuggestedProducts[product] ?? 0)
+        if let imageURL = URL(string: product.imageURLString ?? "") {
+            cell.configure(id: product.id ?? "", with: imageURL, price: ("\(product.price ?? 0.0)"), name: product.name ?? "", attribute: product.attributeString ?? "Ürün", numberOfAdded: LocalData.shared.selectedProducts[product] ?? 0)
         }
     }
 }
@@ -418,12 +363,12 @@ extension ProductListingViewController: UICollectionViewDataSource {
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let newSuggest = suggestedProducts[indexPath.row]
-            self.presenter.routeToProductDetail(suggestedProduct: newSuggest)
+            let newSuggest = Product(suggestedProduct: suggestedProducts[indexPath.row])
+            self.presenter.routeToProductDetail(product: newSuggest)
             
         } else if indexPath.section == 1 {
-            let newMain = mainProducts[indexPath.row]
-            self.presenter.routeToProductDetail(mainProduct: newMain)
+            let newMain = Product(mainProduct: mainProducts[indexPath.row])
+            self.presenter.routeToProductDetail(product: newMain)
         }
     }
 }
