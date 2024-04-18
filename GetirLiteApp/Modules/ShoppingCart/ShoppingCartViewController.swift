@@ -19,16 +19,59 @@ final class ShoppingCartViewController: UIViewController, ShoppingCartViewContro
     var suggestedProducts = [SuggestedProduct]()
     var selectedProductsArray = [(Product, Int)]()
     
-    private let defaultAddButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Sepete Ekle", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 14)
-        button.backgroundColor = GetirColor.purple
-        button.layer.cornerRadius = 10
-        button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
-        // button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-        return button
+    private var defaultAddButton: UIStackView = {
+        
+        // Create a horizontal stack view to hold the left and right parts
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        
+        stackView.layer.cornerRadius = 10
+        stackView.layer.masksToBounds = true
+        
+        stackView.layer.borderWidth = 1.5
+        stackView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
+        
+        return stackView
     }()
+    
+    private var buttonLabel: UILabel = {
+        // Left part: Button label with purple background
+        let buttonLabel = UILabel()
+        buttonLabel.backgroundColor = GetirColor.purple
+        buttonLabel.text = "Siparişi Tamamla"
+        buttonLabel.font = .boldSystemFont(ofSize: 14)
+        buttonLabel.textColor = .white
+        buttonLabel.textAlignment = .center
+        
+        return buttonLabel
+    }()
+    
+    private var billLabel: UILabel = {
+        // Right part: Bill label with white background
+        let billLabel = UILabel()
+        billLabel.backgroundColor = .white
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencySymbol = "₺"
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        if let formattedAmount = formatter.string(from: NSNumber(value: LocalData.shared.totalBill)) {
+            billLabel.text = formattedAmount
+        }
+        
+        billLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        billLabel.textAlignment = .center
+        billLabel.textColor = GetirColor.purple
+        let billLabelWidthConstraint = billLabel.widthAnchor.constraint(equalToConstant: 120)
+        billLabelWidthConstraint.priority = .defaultHigh
+        billLabelWidthConstraint.isActive = true
+        
+        return billLabel
+    }()
+
     
     private let presenter: ShoppingCartPresenter
     
@@ -46,10 +89,10 @@ final class ShoppingCartViewController: UIViewController, ShoppingCartViewContro
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
         updateSelectedProductsArray()
-
+        
         setupNavigationBar()
         setupUI()
-
+        
         setupCollectionView()
         fetchData()
     }
@@ -59,9 +102,16 @@ final class ShoppingCartViewController: UIViewController, ShoppingCartViewContro
 // MARK: - Setup UI elements
 extension ShoppingCartViewController {
     private func setupUI() {
-        view.addSubview(defaultAddButton)
         view.backgroundColor = .white
+        view.addSubview(defaultAddButton)
         
+        defaultAddButton.addArrangedSubview(buttonLabel)
+        defaultAddButton.addArrangedSubview(billLabel)
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(endOrderButtonTapped))
+        defaultAddButton.addGestureRecognizer(gesture)
+        
+        // Set constraints
         defaultAddButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -70,7 +120,17 @@ extension ShoppingCartViewController {
             defaultAddButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             defaultAddButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
+    }
+
+    private func updatePrice() {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencySymbol = "₺"
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        if let formattedAmount = formatter.string(from: NSNumber(value: LocalData.shared.totalBill)) {
+            billLabel.text = formattedAmount
+        }
     }
     
     private func setupCollectionView() {
@@ -92,7 +152,7 @@ extension ShoppingCartViewController {
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: productCellIdentifier)
         collectionView.register(SelectedProductCell.self, forCellWithReuseIdentifier: selectedProductCellIdentifier)
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "sectionHeader")
-
+        
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -152,7 +212,7 @@ extension ShoppingCartViewController {
         
         let backgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "background")
         backgroundDecoration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-
+        
         section.decorationItems = [backgroundDecoration]
         
         return section
@@ -232,7 +292,36 @@ extension ShoppingCartViewController {
         LocalData.shared.totalBill = 0.0
         
         updateSelectedProductsArray()
+        updatePrice()
+
         self.collectionView.reloadData()
+    }
+    
+    @objc func endOrderButtonTapped() {
+        let alertController = UIAlertController(title: "Onay", message: "Siparişi onaylıyor musunuz?", preferredStyle: .alert)
+            
+        let cancelAction = UIAlertAction(title: "Vazgeç", style: .cancel, handler: nil)
+        let confirmAction = UIAlertAction(title: "Evet", style: .default) { _ in
+            LocalData.shared.selectedProducts.removeAll()
+            LocalData.shared.totalBill = 0.0
+            
+            self.updateSelectedProductsArray()
+            self.updatePrice()
+            
+            self.collectionView.reloadData()
+            self.placeOrder()
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(confirmAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func placeOrder() {
+        // Here you can perform actions to place the order
+        // For example, you can navigate to the listing view controller after placing the order
+        self.presenter.routeToProductListing()
     }
 }
 
@@ -315,6 +404,7 @@ extension ShoppingCartViewController: UICollectionViewDataSource {
         }
         
         updateSelectedProductsArray()
+        updatePrice()
         collectionView.reloadData()
     }
     
@@ -340,6 +430,7 @@ extension ShoppingCartViewController: UICollectionViewDataSource {
         }
         
         updateSelectedProductsArray()
+        updatePrice()
         collectionView.reloadData()
     }
     
@@ -362,6 +453,7 @@ extension ShoppingCartViewController: UICollectionViewDataSource {
         }
         
         updateSelectedProductsArray()
+        updatePrice()
         collectionView.reloadData()
     }
     
@@ -387,6 +479,7 @@ extension ShoppingCartViewController: UICollectionViewDataSource {
         }
         
         updateSelectedProductsArray()
+        updatePrice()
         collectionView.reloadData()
     }
     
@@ -436,14 +529,14 @@ extension ShoppingCartViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-            if kind == UICollectionView.elementKindSectionHeader {
-                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "sectionHeader", for: indexPath) as! SectionHeaderView
-                headerView.titleLabel.text = "Önerilen Ürünler"
-                return headerView
-            } else {
-                fatalError("Unexpected element kind")
-            }
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "sectionHeader", for: indexPath) as! SectionHeaderView
+            headerView.titleLabel.text = "Önerilen Ürünler"
+            return headerView
+        } else {
+            fatalError("Unexpected element kind")
         }
+    }
 }
 
 class SectionHeaderView: UICollectionReusableView {
