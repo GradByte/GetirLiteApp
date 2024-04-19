@@ -9,18 +9,14 @@ import Foundation
 import UIKit
 import Kingfisher
 
-final class ShoppingCartViewController: UIViewController, ShoppingCartViewControllerProtocol {
+final class ShoppingCartViewController: UIViewController {
     
-    private var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     private let selectedProductCellIdentifier = "selectedProductCell"
     private let productCellIdentifier = "productCell"
     
-    //Populate these with API
-    var suggestedProducts = [SuggestedProduct]()
-    var selectedProductsArray = [(Product, Int)]()
     
     private var defaultAddButton: UIStackView = {
-        
         // Create a horizontal stack view to hold the left and right parts
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -71,7 +67,6 @@ final class ShoppingCartViewController: UIViewController, ShoppingCartViewContro
         
         return billLabel
     }()
-
     
     private let presenter: ShoppingCartPresenter
     
@@ -88,27 +83,42 @@ final class ShoppingCartViewController: UIViewController, ShoppingCartViewContro
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
-        updateSelectedProductsArray()
-        
-        setupNavigationBar()
         setupUI()
-        
-        setupCollectionView()
-        fetchData()
     }
     
+}
+
+extension ShoppingCartViewController: ShoppingCartViewControllerProtocol {
+    func getSelectedProducts() {
+        self.collectionView.reloadData()
+    }
+    
+    func getFetchedSuggestedProducts() {
+        self.collectionView.reloadData()
+    }
+    
+    func buttonIsClicked() {
+        self.updatePrice()
+        self.collectionView.reloadData()
+    }
 }
 
 // MARK: - Setup UI elements
 extension ShoppingCartViewController {
     private func setupUI() {
+        setupNavigationBar()
+        setupButton()
+        setupCollectionView()
+    }
+    
+    private func setupButton() {
         view.backgroundColor = .white
         view.addSubview(defaultAddButton)
         
         defaultAddButton.addArrangedSubview(buttonLabel)
         defaultAddButton.addArrangedSubview(billLabel)
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(endOrderButtonTapped))
+        let gesture = UITapGestureRecognizer(target: self.presenter, action: #selector(self.presenter.endOrderButtonTapped))
         defaultAddButton.addGestureRecognizer(gesture)
         
         // Set constraints
@@ -122,7 +132,7 @@ extension ShoppingCartViewController {
         ])
     }
 
-    private func updatePrice() {
+    func updatePrice() {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencySymbol = "₺"
@@ -171,7 +181,7 @@ extension ShoppingCartViewController {
     }
     
     private func createHorizontalSectionLayout() -> NSCollectionLayoutSection {
-        // Define item size and group size for horizontal section
+
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
@@ -187,7 +197,6 @@ extension ShoppingCartViewController {
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         section.boundarySupplementaryItems = [sectionHeader]
         
-        // Ensure horizontal scrolling
         section.orthogonalScrollingBehavior = .continuous
         
         let backgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "background")
@@ -198,7 +207,7 @@ extension ShoppingCartViewController {
     }
     
     private func createVerticalSectionLayout() -> NSCollectionLayoutSection {
-        // Define item size and group size for vertical section
+
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
@@ -219,7 +228,7 @@ extension ShoppingCartViewController {
     }
     
     private func createDefaultSectionLayout() -> NSCollectionLayoutSection {
-        // Define a simple layout for default section (fallback)
+
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
@@ -230,7 +239,7 @@ extension ShoppingCartViewController {
     }
     
     
-    private func setupNavigationBar() {
+    func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = GetirColor.purple
@@ -243,52 +252,38 @@ extension ShoppingCartViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         title = "Sepetim"
         
-        // Assign the button to the leading navigation item
         navigationItem.leftBarButtonItem = createCloseButton()
         navigationItem.rightBarButtonItem = createDeleteButton()
     }
+    
     private func createCloseButton() -> UIBarButtonItem {
         let closeButton = UIButton(type: .custom)
         let xImage = UIImage(named: "x_button")
         closeButton.setImage(xImage, for: .normal)
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.addTarget(self.presenter, action: #selector(self.presenter.closeButtonTapped), for: .touchUpInside)
         
-        // Set the size of the button to match the image size
         closeButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         
-        // Wrap the button in a container view to add padding if needed
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         containerView.addSubview(closeButton)
         
-        // Create a UIBarButtonItem with the container view
         let closeBarButtonItem = UIBarButtonItem(customView: containerView)
         return closeBarButtonItem
     }
-    
-    
     
     private func createDeleteButton() -> UIBarButtonItem {
         let deleteButton = UIButton(type: .custom)
         let trashImage = UIImage(named: "trash")
         deleteButton.setImage(trashImage, for: .normal)
-        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        deleteButton.addTarget(self.presenter, action: #selector(self.presenter.deleteButtonTapped), for: .touchUpInside)
         
-        // Set the size of the button to match the image size
         deleteButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        
-        // Wrap the button in a container view to add padding if needed
+
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         containerView.addSubview(deleteButton)
         
-        // Create a UIBarButtonItem with the container view
         let deleteBarButtonItem = UIBarButtonItem(customView: containerView)
         return deleteBarButtonItem
-    }
-    
-    private func placeOrder() {
-        // Here you can perform actions to place the order
-        // For example, you can navigate to the listing view controller after placing the order
-        self.presenter.routeToProductListing()
     }
 }
 
@@ -296,232 +291,36 @@ extension ShoppingCartViewController {
 extension ShoppingCartViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        self.presenter.numberOfSections()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return selectedProductsArray.count
-        } else if section == 1 {
-            return suggestedProducts.count
-        } else {
-            return 0 // Default section has no items
-        }
+        self.presenter.numberOfItemsInSection(section: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectedProductCellIdentifier, for: indexPath) as! SelectedProductCell
-            
-            let (product, quantity) = selectedProductsArray[indexPath.item]
-            cell.configure(id: product.id ?? "", with: URL(string: product.imageURLString ?? ""), price: "\(product.price ?? 0.0)", name: product.name ?? "", attribute: product.attributeString ?? "Ürün", numberOfAdded: quantity)
-            
-            cell.plusButtonTappedHandler = { [weak self] in
-                self?.handlePlusButtonTapSelected(cell: cell, currentProduct: product)
-            }
-            
-            cell.minusButtonTappedHandler = { [weak self] in
-                self?.handleMinusButtonTapSelected(cell: cell, currentProduct: product)
-            }
-            
-            return cell
-        } else if indexPath.section == 1 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: productCellIdentifier, for: indexPath) as! ProductCell
-            let currentProduct = Product(suggestedProduct: suggestedProducts[indexPath.item])
-            configureCell(cell, with: currentProduct)
-            //check if cell needs to be highlighted
-            //else condition isnt required because we have prepareForReuse in place
-            if LocalData.shared.selectedProducts[currentProduct] != nil {
-                cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            }
-            
-            cell.plusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handlePlusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-            
-            cell.minusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handleMinusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-            
-            return cell
-        } else {
-            // Return other cells for other sections
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: productCellIdentifier, for: indexPath) as! ProductCell
-            return cell
-        }
+        self.presenter.cellForItemAt(collectionView: collectionView, indexPath: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "sectionHeader", for: indexPath) as! SectionHeaderView
-            headerView.titleLabel.text = "Önerilen Ürünler"
-            return headerView
-        } else {
-            fatalError("Unexpected element kind")
-        }
+        self.presenter.viewForSupplementaryElementOfKind(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
     }
     
     private func configureCell(_ cell: ProductCell, with product: Product) {
-        
-        if let imageURL = URL(string: product.imageURLString ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: ("\(product.price ?? 0.0)"), name: product.name ?? "", attribute: product.attributeString ?? "Ürün", numberOfAdded: LocalData.shared.selectedProducts[product] ?? 0)
-        }
+        self.presenter.configureCell(cell, with: product)
     }
 }
 
 // MARK: - CollectionView Delegate
 extension ShoppingCartViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let product = selectedProductsArray[indexPath.item].0
-            self.presenter.routeToProductDetail(product: product)
-            
-        } else if indexPath.section == 1 {
-            let product = Product(suggestedProduct: suggestedProducts[indexPath.row])
-            self.presenter.routeToProductDetail(product: product)
-        }
+        self.presenter.didSelectItemAt(indexPath: indexPath)
     }
 }
 
-// MARK: - Button Actions
+// MARK: - Alert
 extension ShoppingCartViewController {
-
-    func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
-        
-        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! += 1
-        } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedProducts[currentProduct] = 1
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
-        
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    func handlePlusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
-
-        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! += 1
-        } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedProducts[currentProduct] = 1
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    func handleMinusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
-        
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    @objc func closeButtonTapped() {
-        self.presenter.routeToProductListing()
-    }
-    
-    @objc func deleteButtonTapped() {
-        LocalData.shared.selectedProducts.removeAll()
-        LocalData.shared.totalBill = 0.0
-        
-        updateSelectedProductsArray()
-        updatePrice()
-
-        self.collectionView.reloadData()
-    }
-    
-    @objc func endOrderButtonTapped() {
-        let alertController = UIAlertController(title: "Onay", message: "Siparişi onaylıyor musunuz?", preferredStyle: .alert)
-            
-        let cancelAction = UIAlertAction(title: "Vazgeç", style: .cancel, handler: nil)
-        let confirmAction = UIAlertAction(title: "Evet", style: .default) { _ in
-            LocalData.shared.selectedProducts.removeAll()
-            LocalData.shared.totalBill = 0.0
-            
-            self.updateSelectedProductsArray()
-            self.updatePrice()
-            
-            self.collectionView.reloadData()
-            self.placeOrder()
-        }
-        
-        alertController.addAction(cancelAction)
-        alertController.addAction(confirmAction)
-        
+    func alertOnScreen(alertController: UIAlertController) {
         present(alertController, animated: true, completion: nil)
-    }
-}
-
-extension ShoppingCartViewController {
-    private func fetchData() {
-        if LocalData.shared.downloadedSuggestedProducts.isEmpty {
-            NetworkingManager.shared.fetchSuggestedProducts { products in
-                DispatchQueue.main.async {
-                    if let products = products {
-                        self.suggestedProducts = products
-                        LocalData.shared.downloadedSuggestedProducts = products
-                        self.collectionView.reloadData()
-                    } else {
-                        print("Failed to fetch products")
-                    }
-                }
-            }
-        } else {
-            self.suggestedProducts = LocalData.shared.downloadedSuggestedProducts
-        }
-    }
-    
-    private func updateSelectedProductsArray() {
-        self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
     }
 }

@@ -18,6 +18,7 @@ final class ProductListingInteractor: ProductListingInteractorInputProtocol {
                     self.presenter?.doneFetchMainProducts(mainProducts: products)
                 } else {
                     print("Failed to fetch products")
+                    self.fetchMainProducts()
                 }
             }
         }
@@ -30,6 +31,7 @@ final class ProductListingInteractor: ProductListingInteractorInputProtocol {
                     self.presenter?.doneFetchSuggestedProducts(suggestedProducts: products)
                 } else {
                     print("Failed to fetch products")
+                    self.fetchSuggestedProducts()
                 }
             }
         }

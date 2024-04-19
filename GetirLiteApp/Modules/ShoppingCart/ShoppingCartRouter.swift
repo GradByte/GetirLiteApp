@@ -24,7 +24,7 @@ final class ShoppingCartRouter {
         let view = ShoppingCartViewController(presenter: presenter)
         
         router.viewController = view
-        interactor.output = presenter
+        interactor.presenter = presenter
         return view
     }
 }

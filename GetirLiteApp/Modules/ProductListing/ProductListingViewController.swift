@@ -11,19 +11,8 @@ import Kingfisher
 
 final class ProductListingViewController: UIViewController {
     
-    private var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     private let productCellIdentifier = "productCell"
-    
-    //Populate these with API
-    var suggestedProducts = [SuggestedProduct]()
-    var mainProducts = [MainProduct]()
-    
-    private var label: UILabel = {
-        let label = UILabel()
-        label.text = "ProductListingView"
-        label.textColor = GetirColor.yellow
-        return label
-    }()
     
     private let presenter: ProductListingPresenter
     
@@ -39,30 +28,28 @@ final class ProductListingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
-        presenter.askFetchMainProducts()
-        presenter.askFetchSuggestedProducts()
-        
-        setupNavigationBar()
-        setupCollectionView()
+        setupUI()
     }
 }
 
 extension ProductListingViewController: ProductListingViewControllerProtocol {
-    func getFetchedMainProducts(mainProducts: [MainProduct]) {
-        self.mainProducts = mainProducts
+    func getFetchedMainProducts() {
         self.collectionView.reloadData()
     }
     
-    func getFetchedSuggestedProducts(suggestedProducts: [SuggestedProduct]) {
-        self.suggestedProducts = suggestedProducts
+    func getFetchedSuggestedProducts() {
         self.collectionView.reloadData()
     }
 }
 
 // MARK: - Setup UI Elements
 extension ProductListingViewController {
+    func setupUI() {
+        setupNavigationBar()
+        setupCollectionView()
+    }
     
-    private func setupCollectionView() {
+    func setupCollectionView() {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
             switch sectionIndex {
             case 0:
@@ -95,8 +82,31 @@ extension ProductListingViewController {
         ])
     }
     
+    func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = GetirColor.purple
+        let titleTextAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.boldSystemFont(ofSize: 16)
+        ]
+        appearance.titleTextAttributes = titleTextAttributes
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        title = "Ürünler"
+        
+        if LocalData.shared.totalBill > 0.0 {
+            navigationItem.rightBarButtonItem = navbarBasketButton()
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem()
+        }
+    }
+}
+
+// MARK: - Layouts and NavBar Items
+extension ProductListingViewController {
+    
     private func createHorizontalSectionLayout() -> NSCollectionLayoutSection {
-        // Define item size and group size for horizontal section
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
@@ -108,7 +118,6 @@ extension ProductListingViewController {
         section.interGroupSpacing = 0
         section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10)
         
-        // Ensure horizontal scrolling
         section.orthogonalScrollingBehavior = .continuous
         
         let backgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "background")
@@ -119,7 +128,6 @@ extension ProductListingViewController {
     }
     
     private func createVerticalSectionLayout() -> NSCollectionLayoutSection {
-        // Define item size and group size for vertical section
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
@@ -139,36 +147,13 @@ extension ProductListingViewController {
     }
     
     private func createDefaultSectionLayout() -> NSCollectionLayoutSection {
-        // Define a simple layout for default section (fallback)
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-        
         let section = NSCollectionLayoutSection(group: group)
-        
         return section
     }
     
-    private func setupNavigationBar() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = GetirColor.purple
-        let titleTextAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.boldSystemFont(ofSize: 16)
-        ]
-        appearance.titleTextAttributes = titleTextAttributes
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
-        title = "Ürünler"
-        
-        // Set the bar button item to the navigation item's rightBarButtonItem
-        if LocalData.shared.totalBill > 0.0 {
-            navigationItem.rightBarButtonItem = navbarBasketButton()
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem()
-        }
-    }
     
     private func navbarBasketButton() -> UIBarButtonItem {
         
@@ -205,143 +190,33 @@ extension ProductListingViewController {
         containerView.layer.cornerRadius = 10
         containerView.layer.masksToBounds = true
         
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.navbarBasketButtonTapped))
+        let gesture = UITapGestureRecognizer(target: self.presenter, action:  #selector(self.presenter.navbarBasketButtonTapped))
         containerView.addGestureRecognizer(gesture)
         
         let customButton = UIBarButtonItem(customView: containerView)
         
         return customButton
     }
-    
-    // Action for the navbarBasketButton
-    @objc private func navbarBasketButtonTapped() {
-        self.presenter.routeToShoppingCart(product: Product.dummy)
-    }
 }
 
 // MARK: - UICollectionView Data Source
 extension ProductListingViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        self.presenter.numberOfSections()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return suggestedProducts.count // Horizontal layout
-        } else if section == 1 {
-            return mainProducts.count
-        } else {
-            return 0 // Default section has no items
-        }
+        self.presenter.numberOfItemsInSection(section: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: productCellIdentifier, for: indexPath) as! ProductCell
-        
-        if indexPath.section == 0 {
-            let currentProduct = Product(suggestedProduct: suggestedProducts[indexPath.item])
-            configureCell(cell, with: currentProduct)
-            //check if cell needs to be highlighted
-            //else condition isnt required because we have prepareForReuse in place
-            if LocalData.shared.selectedProducts[currentProduct] != nil {
-                cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            }
-            
-            cell.plusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handlePlusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-            
-            cell.minusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handleMinusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-            
-        } else if indexPath.section == 1 {
-            let currentProduct = Product(mainProduct: mainProducts[indexPath.item])
-            configureCell(cell, with: currentProduct)
-            //check if cell needs to be highlighted
-            //else condition isnt required because we have prepareForReuse in place
-            if LocalData.shared.selectedProducts[currentProduct] != nil {
-                cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            }
-            
-            cell.plusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handlePlusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-            
-            cell.minusButtonTappedHandler = { [weak cell] in
-                guard let cell = cell else { return }
-                self.handleMinusButtonTap(cell: cell, currentProduct: currentProduct)
-            }
-        }
-        
-        return cell
-    }
-    
-    // Function to handle the plus button tap event
-    func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
-        // Set the border color of the cell's borderView to purple
-        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-        // Perform any other actions related to the plus button tap if needed
-        
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! += 1
-        } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedProducts[currentProduct] = 1
-        }
-        
-        setupNavigationBar()
-        collectionView.reloadData()
-    }
-    
-    // Function to handle the mius button tap event
-    func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
-        
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        setupNavigationBar()
-        collectionView.reloadData()
-    }
-    
-    private func configureCell(_ cell: ProductCell, with product: Product) {
-        
-        if let imageURL = URL(string: product.imageURLString ?? "") {
-            cell.configure(id: product.id ?? "", with: imageURL, price: ("\(product.price ?? 0.0)"), name: product.name ?? "", attribute: product.attributeString ?? "Ürün", numberOfAdded: LocalData.shared.selectedProducts[product] ?? 0)
-        }
+        self.presenter.cellForItemAt(collectionView: collectionView, indexPath: indexPath)
     }
 }
 
-// MARK: - CollectionView Delegate
+// MARK: - UICollectionView Delegate
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let newSuggest = Product(suggestedProduct: suggestedProducts[indexPath.row])
-            self.presenter.routeToProductDetail(product: newSuggest)
-            
-        } else if indexPath.section == 1 {
-            let newMain = Product(mainProduct: mainProducts[indexPath.row])
-            self.presenter.routeToProductDetail(product: newMain)
-        }
+        self.presenter.didSelectItemAt(indexPath: indexPath)
     }
 }
