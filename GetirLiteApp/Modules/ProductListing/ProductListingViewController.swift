@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import Kingfisher
 
-final class ProductListingViewController: UIViewController, ProductListingViewControllerProtocol {
+final class ProductListingViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private let productCellIdentifier = "productCell"
@@ -29,7 +29,6 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
     
     init(presenter: ProductListingPresenter) {
         self.presenter = presenter
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -40,60 +39,28 @@ final class ProductListingViewController: UIViewController, ProductListingViewCo
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad(view: self)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(updateBillLabel), name: Notification.Name("TotalBillUpdated"), object: nil)
+        presenter.askFetchMainProducts()
+        presenter.askFetchSuggestedProducts()
         
         setupNavigationBar()
-        setupUI()
-        fetchData()
+        setupCollectionView()
+    }
+}
+
+extension ProductListingViewController: ProductListingViewControllerProtocol {
+    func getFetchedMainProducts(mainProducts: [MainProduct]) {
+        self.mainProducts = mainProducts
+        self.collectionView.reloadData()
     }
     
-    // Method to update the bill label in the navigation bar's trailing button
-    @objc private func updateBillLabel() {
-        setupNavigationBar()
-    }
-    
-    // Remove observer when the view controller is deallocated
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("TotalBillUpdated"), object: nil)
+    func getFetchedSuggestedProducts(suggestedProducts: [SuggestedProduct]) {
+        self.suggestedProducts = suggestedProducts
+        self.collectionView.reloadData()
     }
 }
 
 // MARK: - Setup UI Elements
 extension ProductListingViewController {
-    private func setupUI() {
-        setupCollectionView()
-    }
-    
-    private func fetchData() {
-        if LocalData.shared.downloadedMainProducts.isEmpty && LocalData.shared.downloadedSuggestedProducts.isEmpty {
-            NetworkingManager.shared.fetchSuggestedProducts { products in
-                DispatchQueue.main.async {
-                    if let products = products {
-                        self.suggestedProducts = products
-                        LocalData.shared.downloadedSuggestedProducts = products
-                        self.collectionView.reloadData()
-                    } else {
-                        print("Failed to fetch products")
-                    }
-                }
-            }
-            NetworkingManager.shared.fetchMainProducts { products in
-                DispatchQueue.main.async {
-                    if let products = products {
-                        self.mainProducts = products
-                        LocalData.shared.downloadedMainProducts = products
-                        self.collectionView.reloadData()
-                    } else {
-                        print("Failed to fetch products")
-                    }
-                }
-            }
-        } else {
-            self.suggestedProducts = LocalData.shared.downloadedSuggestedProducts
-            self.mainProducts = LocalData.shared.downloadedMainProducts
-        }
-    }
     
     private func setupCollectionView() {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
@@ -106,13 +73,17 @@ extension ProductListingViewController {
                 return self.createDefaultSectionLayout()
             }
         }
-        
-        layout.register(BackgroundDecorationView.self, forDecorationViewOfKind: "background")
-        
+                
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: productCellIdentifier)
+        collectionView.backgroundColor = GetirColor.almostWhiteGray
+        collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        
         collectionView.dataSource = self
         collectionView.delegate = self
+        
+        layout.register(BackgroundDecorationView.self, forDecorationViewOfKind: "background")
+        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: productCellIdentifier)
+        
         view.addSubview(collectionView)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -122,9 +93,6 @@ extension ProductListingViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-        collectionView.backgroundColor = GetirColor.almostWhiteGray
-        collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     }
     
     private func createHorizontalSectionLayout() -> NSCollectionLayoutSection {
@@ -330,6 +298,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
             LocalData.shared.selectedProducts[currentProduct] = 1
         }
         
+        setupNavigationBar()
         collectionView.reloadData()
     }
     
@@ -337,9 +306,6 @@ extension ProductListingViewController: UICollectionViewDataSource {
     func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
         
         LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
         
         if (LocalData.shared.selectedProducts[currentProduct] != nil) {
             LocalData.shared.selectedProducts[currentProduct]! -= 1
@@ -354,6 +320,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
             setupNavigationBar()
         }
         
+        setupNavigationBar()
         collectionView.reloadData()
     }
     
@@ -376,16 +343,5 @@ extension ProductListingViewController: UICollectionViewDelegate {
             let newMain = Product(mainProduct: mainProducts[indexPath.row])
             self.presenter.routeToProductDetail(product: newMain)
         }
-    }
-}
-
-class BackgroundDecorationView: UICollectionReusableView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .white // Set the desired background color here
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

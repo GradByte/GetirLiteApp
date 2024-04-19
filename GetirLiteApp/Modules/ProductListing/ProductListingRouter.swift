@@ -24,7 +24,7 @@ final class ProductListingRouter {
         let view = ProductListingViewController(presenter: presenter)
         
         router.viewController = view
-        interactor.output = presenter
+        interactor.presenter = presenter
         return view
     }
 }

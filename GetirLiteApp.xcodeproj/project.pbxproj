@@ -29,6 +29,8 @@
 		AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3912BC8383F000873F8 /* BaseViewController.swift */; };
 		AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3942BC838B3000873F8 /* LoadingView.swift */; };
 		AA20C3972BC838DE000873F8 /* LoadingShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA20C3962BC838DE000873F8 /* LoadingShowable.swift */; };
+		AA3B870D2BD282B700AC7DFA /* BackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B870C2BD282B700AC7DFA /* BackgroundDecorationView.swift */; };
+		AA3B870F2BD282EF00AC7DFA /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B870E2BD282EF00AC7DFA /* SectionHeaderView.swift */; };
 		AA62EB472BCE890500656A1C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62EB462BCE890500656A1C /* Color.swift */; };
 		AA62EB492BCEA14700656A1C /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62EB482BCEA14700656A1C /* ProductCell.swift */; };
 		AA927D9D2BCD52E80018A223 /* ProductListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */; };
@@ -68,6 +70,8 @@
 		AA20C3912BC8383F000873F8 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		AA20C3942BC838B3000873F8 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		AA20C3962BC838DE000873F8 /* LoadingShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingShowable.swift; sourceTree = "<group>"; };
+		AA3B870C2BD282B700AC7DFA /* BackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDecorationView.swift; sourceTree = "<group>"; };
+		AA3B870E2BD282EF00AC7DFA /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		AA62EB462BCE890500656A1C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		AA62EB482BCEA14700656A1C /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
 		AA927D9C2BCD52E80018A223 /* ProductListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 		AA20C34F2BC7EE79000873F8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AA3B870B2BD2829700AC7DFA /* DecorationViews */,
 				AA20C3932BC838A5000873F8 /* Utils */,
 				AA927DAA2BCD5DE10018A223 /* Networking.swift */,
 				AA081F422BCFBBF10012E9CF /* LocalData.swift */,
@@ -220,6 +225,15 @@
 				AA62EB462BCE890500656A1C /* Color.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		AA3B870B2BD2829700AC7DFA /* DecorationViews */ = {
+			isa = PBXGroup;
+			children = (
+				AA3B870E2BD282EF00AC7DFA /* SectionHeaderView.swift */,
+				AA3B870C2BD282B700AC7DFA /* BackgroundDecorationView.swift */,
+			);
+			path = DecorationViews;
 			sourceTree = "<group>";
 		};
 		AA9DEA8F2BD14CA600CEF89B /* Cell */ = {
@@ -336,12 +350,14 @@
 				AA20C3952BC838B3000873F8 /* LoadingView.swift in Sources */,
 				AA927DA52BCD532C0018A223 /* ProductListingEntity.swift in Sources */,
 				AA081F552BCFDC6A0012E9CF /* ShoppingCartPresenter.swift in Sources */,
+				AA3B870F2BD282EF00AC7DFA /* SectionHeaderView.swift in Sources */,
 				AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */,
 				AA081F492BCFDA300012E9CF /* ProductDetailInteractor.swift in Sources */,
 				AA62EB492BCEA14700656A1C /* ProductCell.swift in Sources */,
 				AA081F4B2BCFDA3B0012E9CF /* ProductDetailPresenter.swift in Sources */,
 				AA20C38B2BC836E5000873F8 /* SplashInteractor.swift in Sources */,
 				AA9DEA912BD14CD500CEF89B /* SelectedProductCell.swift in Sources */,
+				AA3B870D2BD282B700AC7DFA /* BackgroundDecorationView.swift in Sources */,
 				AA927DA72BCD53470018A223 /* ProductListingProtocols.swift in Sources */,
 				AA081F452BCFD9D60012E9CF /* ProductDetailProtocols.swift in Sources */,
 				AA62EB472BCE890500656A1C /* Color.swift in Sources */,

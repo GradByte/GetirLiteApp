@@ -14,16 +14,6 @@ class LocalData {
     var downloadedSuggestedProducts = [SuggestedProduct]()
     
     var selectedProducts = [Product:Int]()
-    
-    // Total bill
-    var totalBill: Double {
-        didSet {
-            // Notify observers that totalBill has changed
-            NotificationCenter.default.post(name: Notification.Name("TotalBillUpdated"), object: nil)
-        }
-    }
-    
-    private init() {
-        totalBill = 0.0
-    }
+
+    var totalBill: Double = 0.0
 }

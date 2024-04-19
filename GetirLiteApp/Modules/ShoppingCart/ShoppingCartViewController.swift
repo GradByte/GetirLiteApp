@@ -265,9 +265,7 @@ extension ShoppingCartViewController {
         return closeBarButtonItem
     }
     
-    @objc func closeButtonTapped() {
-        self.presenter.routeToProductListing()
-    }
+    
     
     private func createDeleteButton() -> UIBarButtonItem {
         let deleteButton = UIButton(type: .custom)
@@ -287,37 +285,6 @@ extension ShoppingCartViewController {
         return deleteBarButtonItem
     }
     
-    @objc func deleteButtonTapped() {
-        LocalData.shared.selectedProducts.removeAll()
-        LocalData.shared.totalBill = 0.0
-        
-        updateSelectedProductsArray()
-        updatePrice()
-
-        self.collectionView.reloadData()
-    }
-    
-    @objc func endOrderButtonTapped() {
-        let alertController = UIAlertController(title: "Onay", message: "Siparişi onaylıyor musunuz?", preferredStyle: .alert)
-            
-        let cancelAction = UIAlertAction(title: "Vazgeç", style: .cancel, handler: nil)
-        let confirmAction = UIAlertAction(title: "Evet", style: .default) { _ in
-            LocalData.shared.selectedProducts.removeAll()
-            LocalData.shared.totalBill = 0.0
-            
-            self.updateSelectedProductsArray()
-            self.updatePrice()
-            
-            self.collectionView.reloadData()
-            self.placeOrder()
-        }
-        
-        alertController.addAction(cancelAction)
-        alertController.addAction(confirmAction)
-        
-        present(alertController, animated: true, completion: nil)
-    }
-    
     private func placeOrder() {
         // Here you can perform actions to place the order
         // For example, you can navigate to the listing view controller after placing the order
@@ -327,6 +294,7 @@ extension ShoppingCartViewController {
 
 // MARK: - UICollectionView Data Source
 extension ShoppingCartViewController: UICollectionViewDataSource {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 3
     }
@@ -385,102 +353,14 @@ extension ShoppingCartViewController: UICollectionViewDataSource {
         }
     }
     
-    // Function to handle the plus button tap event
-    func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
-        // Set the border color of the cell's borderView to purple
-        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-        // Perform any other actions related to the plus button tap if needed
-        
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! += 1
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "sectionHeader", for: indexPath) as! SectionHeaderView
+            headerView.titleLabel.text = "Önerilen Ürünler"
+            return headerView
         } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedProducts[currentProduct] = 1
+            fatalError("Unexpected element kind")
         }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    // Function to handle the mius button tap event
-    func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
-        
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    // Function to handle the plus button tap event
-    func handlePlusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
-        // Set the border color of the cell's borderView to purple
-        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-        // Perform any other actions related to the plus button tap if needed
-        
-        LocalData.shared.totalBill += currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! += 1
-        } else {
-            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
-            LocalData.shared.selectedProducts[currentProduct] = 1
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
-    }
-    
-    // Function to handle the mius button tap event
-    func handleMinusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
-        
-        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
-        if LocalData.shared.selectedProducts.isEmpty {
-            setupNavigationBar()
-        }
-        
-        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
-            LocalData.shared.selectedProducts[currentProduct]! -= 1
-            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
-                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
-                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-            }
-        }
-        
-        if LocalData.shared.selectedProducts.isEmpty {
-            LocalData.shared.totalBill = 0.0
-            setupNavigationBar()
-        }
-        
-        updateSelectedProductsArray()
-        updatePrice()
-        collectionView.reloadData()
     }
     
     private func configureCell(_ cell: ProductCell, with product: Product) {
@@ -505,6 +385,123 @@ extension ShoppingCartViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - Button Actions
+extension ShoppingCartViewController {
+
+    func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
+        
+        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+        LocalData.shared.totalBill += currentProduct.price ?? 0.0
+        
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! += 1
+        } else {
+            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+            LocalData.shared.selectedProducts[currentProduct] = 1
+        }
+        
+        updateSelectedProductsArray()
+        updatePrice()
+        collectionView.reloadData()
+    }
+    
+    func handleMinusButtonTap(cell: ProductCell, currentProduct: Product) {
+        
+        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
+        
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! -= 1
+            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
+                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
+                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
+            }
+        }
+        
+        if LocalData.shared.selectedProducts.isEmpty {
+            LocalData.shared.totalBill = 0.0
+            setupNavigationBar()
+        }
+        
+        updateSelectedProductsArray()
+        updatePrice()
+        collectionView.reloadData()
+    }
+    
+    func handlePlusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
+
+        cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+        LocalData.shared.totalBill += currentProduct.price ?? 0.0
+        
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! += 1
+        } else {
+            cell.borderView.layer.borderColor = GetirColor.purple.cgColor
+            LocalData.shared.selectedProducts[currentProduct] = 1
+        }
+        
+        updateSelectedProductsArray()
+        updatePrice()
+        collectionView.reloadData()
+    }
+    
+    func handleMinusButtonTapSelected(cell: SelectedProductCell, currentProduct: Product) {
+        
+        LocalData.shared.totalBill -= currentProduct.price ?? 0.0
+        
+        if (LocalData.shared.selectedProducts[currentProduct] != nil) {
+            LocalData.shared.selectedProducts[currentProduct]! -= 1
+            if LocalData.shared.selectedProducts[currentProduct]! == 0 {
+                LocalData.shared.selectedProducts.removeValue(forKey: currentProduct)
+                cell.borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
+            }
+        }
+        
+        if LocalData.shared.selectedProducts.isEmpty {
+            LocalData.shared.totalBill = 0.0
+            setupNavigationBar()
+        }
+        
+        updateSelectedProductsArray()
+        updatePrice()
+        collectionView.reloadData()
+    }
+    
+    @objc func closeButtonTapped() {
+        self.presenter.routeToProductListing()
+    }
+    
+    @objc func deleteButtonTapped() {
+        LocalData.shared.selectedProducts.removeAll()
+        LocalData.shared.totalBill = 0.0
+        
+        updateSelectedProductsArray()
+        updatePrice()
+
+        self.collectionView.reloadData()
+    }
+    
+    @objc func endOrderButtonTapped() {
+        let alertController = UIAlertController(title: "Onay", message: "Siparişi onaylıyor musunuz?", preferredStyle: .alert)
+            
+        let cancelAction = UIAlertAction(title: "Vazgeç", style: .cancel, handler: nil)
+        let confirmAction = UIAlertAction(title: "Evet", style: .default) { _ in
+            LocalData.shared.selectedProducts.removeAll()
+            LocalData.shared.totalBill = 0.0
+            
+            self.updateSelectedProductsArray()
+            self.updatePrice()
+            
+            self.collectionView.reloadData()
+            self.placeOrder()
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(confirmAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+}
+
 extension ShoppingCartViewController {
     private func fetchData() {
         if LocalData.shared.downloadedSuggestedProducts.isEmpty {
@@ -526,41 +523,5 @@ extension ShoppingCartViewController {
     
     private func updateSelectedProductsArray() {
         self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "sectionHeader", for: indexPath) as! SectionHeaderView
-            headerView.titleLabel.text = "Önerilen Ürünler"
-            return headerView
-        } else {
-            fatalError("Unexpected element kind")
-        }
-    }
-}
-
-class SectionHeaderView: UICollectionReusableView {
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        addSubview(titleLabel)
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
