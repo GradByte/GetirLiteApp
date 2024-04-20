@@ -124,7 +124,7 @@ class ProductCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor // Reset to default color
+        borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
     }
     
     override func layoutSubviews() {
@@ -132,10 +132,6 @@ class ProductCell: UICollectionViewCell {
         
         let padding: CGFloat = 10
         
-        // Calculate the available height for the subviews after adding padding
-        // let availableHeight = contentView.bounds.height - padding * 2
-        
-        // Set the imageView frame to be a square with side length equal to the available width
         let imageViewSize = contentView.bounds.width - 2 * padding
         imageView.frame = CGRect(x: padding, y: padding, width: imageViewSize, height: imageViewSize)
         
@@ -143,10 +139,9 @@ class ProductCell: UICollectionViewCell {
         priceLabel.frame = CGRect(x: padding, y: imageView.frame.maxY + padding, width: contentView.bounds.width - 2 * padding, height: 20)
         nameLabel.frame = CGRect(x: padding, y: priceLabel.frame.maxY, width: contentView.bounds.width - 2 * padding, height: 20)
         attributeLabel.frame = CGRect(x: padding, y: nameLabel.frame.maxY, width: contentView.bounds.width - 2 * padding, height: 20)
+        
         addButton.frame = CGRect(x: contentView.bounds.width - padding - 20, y: padding - 12, width: 32, height: 32)
-        // Position the quantity label below the plus button
         quantityLabel.frame = CGRect(x: contentView.bounds.width - padding - 20, y: addButton.frame.maxY, width: 32, height: 32)
-        // Position the minus button next to the quantity label
         minusButton.frame = CGRect(x: contentView.bounds.width - padding - 20, y: quantityLabel.frame.maxY, width: 32, height: 32)
     }
     
@@ -156,11 +151,9 @@ class ProductCell: UICollectionViewCell {
         self.id = id
         
         if let imageURL = imageURL {
-            // Use Kingfisher to load the image asynchronously
             imageView.kf.indicatorType = .activity
             imageView.kf.setImage(with: imageURL)
         } else {
-            // Set a placeholder image if imageURL is nil
             imageView.image = UIImage(named: "bag.jpeg")
         }
         
@@ -183,11 +176,9 @@ class ProductCell: UICollectionViewCell {
         
         
         if let numberOfAdded = numberOfAdded {
-            // Set the text of the quantity label
             quantityLabel.isHidden = numberOfAdded <= 0
             quantityLabel.text = "\(numberOfAdded)"
             
-            // Toggle the visibility of the minus button based on the quantity
             minusButton.isHidden = numberOfAdded <= 0
             
             if minusButton.isHidden == false {
@@ -215,12 +206,10 @@ class ProductCell: UICollectionViewCell {
     }
     
     @objc private func plusButtonTapped() {
-        // Change borderView color to purple
         plusButtonTappedHandler?()
     }
     
     @objc private func minusButtonTapped() {
-        // Call the minus button tapped handler
         minusButtonTappedHandler?()
     }
 }

@@ -21,10 +21,10 @@ class SelectedProductCell: UICollectionViewCell {
     
     let borderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear // Make the background clear
+        view.backgroundColor = .clear
         view.layer.cornerRadius = 10
         view.layer.borderWidth = 2
-        view.layer.borderColor = GetirColor.almostWhiteGray.cgColor // Gray border color
+        view.layer.borderColor = GetirColor.almostWhiteGray.cgColor
         return view
     }()
     
@@ -131,7 +131,7 @@ class SelectedProductCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor // Reset to default color
+        borderView.layer.borderColor = GetirColor.almostWhiteGray.cgColor
     }
     
     override func layoutSubviews() {
@@ -194,11 +194,10 @@ class SelectedProductCell: UICollectionViewCell {
         
         
         if let numberOfAdded = numberOfAdded {
-            // Set the text of the quantity label
+
             quantityLabel.isHidden = numberOfAdded <= 0
             quantityLabel.text = "\(numberOfAdded)"
             
-            // Toggle the visibility of the minus button based on the quantity
             minusButton.isHidden = numberOfAdded <= 0
             
             if minusButton.isHidden == false {
@@ -226,12 +225,10 @@ class SelectedProductCell: UICollectionViewCell {
     }
     
     @objc private func plusButtonTapped() {
-        // Change borderView color to purple
         plusButtonTappedHandler?()
     }
     
     @objc private func minusButtonTapped() {
-        // Call the minus button tapped handler
         minusButtonTappedHandler?()
     }
 }
