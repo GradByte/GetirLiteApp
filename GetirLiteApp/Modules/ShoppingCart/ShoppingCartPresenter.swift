@@ -273,10 +273,9 @@ extension ShoppingCartPresenter: ShoppingCartPresenterObjCProtocol {
     }
     
     @objc func endOrderButtonTapped() {
-        let alertController = UIAlertController(title: "Onay", message: "Siparişi onaylıyor musunuz?", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Siparişiniz Alındı", message: "\(self.view?.billLabel.text ?? "") tutarındaki siparişinizi işleme koyduk.", preferredStyle: .alert)
             
-        let cancelAction = UIAlertAction(title: "Vazgeç", style: .cancel, handler: nil)
-        let confirmAction = UIAlertAction(title: "Evet", style: .default) { _ in
+        let confirmAction = UIAlertAction(title: "Teşekkürler", style: .default) { _ in
             LocalData.shared.selectedProducts.removeAll()
             LocalData.shared.totalBill = 0.0
             
@@ -287,7 +286,6 @@ extension ShoppingCartPresenter: ShoppingCartPresenterObjCProtocol {
             self.routeToProductListing()
         }
         
-        alertController.addAction(cancelAction)
         alertController.addAction(confirmAction)
         
         self.view?.alertOnScreen(alertController: alertController)
