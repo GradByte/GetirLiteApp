@@ -32,11 +32,14 @@ protocol ProductListingPresenterProtocol: AnyObject {
     // Button Actions
     func handlePlusButtonTap(cell: ProductCell, currentProduct: Product)
     func handleMinusButtonTap(cell: ProductCell, currentProduct: Product)
-    func navbarBasketButtonTapped()
     
     // Routing
     func routeToProductDetail(product: Product)
     func routeToShoppingCart(product: Product)
+}
+
+@objc protocol ProductListingPresenterObjCProtocol: AnyObject {
+    func navbarBasketButtonTapped()
 }
 
 protocol ProductListingInteractorInputProtocol: AnyObject {

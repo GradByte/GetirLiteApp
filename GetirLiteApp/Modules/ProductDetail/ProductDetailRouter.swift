@@ -20,8 +20,8 @@ final class ProductDetailRouter {
         
         let interactor = ProductDetailInteractor()
         let router = ProductDetailRouter()
-        let presenter = ProductDetailPresenter( router: router, interactor: interactor)
-        let view = ProductDetailViewController(presenter: presenter, product: product)
+        let presenter = ProductDetailPresenter( router: router, interactor: interactor, product: product)
+        let view = ProductDetailViewController(presenter: presenter)
         
         router.viewController = view
         interactor.output = presenter

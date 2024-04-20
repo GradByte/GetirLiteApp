@@ -10,14 +10,14 @@ import UIKit
 
 final class ShoppingCartPresenter {
     
-    private weak var view: ShoppingCartViewController?
-    private let router: ShoppingCartRouter
-    private let interactor: ShoppingCartInteractor
-    
     var suggestedProducts = [SuggestedProduct]()
     var selectedProductsArray = [(Product, Int)]()
     private let selectedProductCellIdentifier = "selectedProductCell"
     private let productCellIdentifier = "productCell"
+    
+    private weak var view: ShoppingCartViewController?
+    private let router: ShoppingCartRouter
+    private let interactor: ShoppingCartInteractor
     
     init(router: ShoppingCartRouter, interactor: ShoppingCartInteractor) {
         self.router = router
@@ -25,7 +25,6 @@ final class ShoppingCartPresenter {
     }
 }
 
-// MARK: - Route To Other Pages
 extension ShoppingCartPresenter: ShoppingCartPresenterProtocol {
     func viewDidLoad(view: ShoppingCartViewController) {
         self.view = view
@@ -161,9 +160,22 @@ extension ShoppingCartPresenter {
     }
 }
 
-// MARK: - Button Actions
+// MARK: - Update Price
 extension ShoppingCartPresenter {
+    func updatePrice() {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencySymbol = "₺"
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        if let formattedAmount = formatter.string(from: NSNumber(value: LocalData.shared.totalBill)) {
+            self.view?.billLabel.text = formattedAmount
+        }
+    }
+}
 
+// MARK: - Button Actions
+extension ShoppingCartPresenter: ShoppingCartPresenterObjCProtocol {
     func handlePlusButtonTap(cell: ProductCell, currentProduct: Product) {
         
         cell.borderView.layer.borderColor = GetirColor.purple.cgColor
@@ -176,10 +188,9 @@ extension ShoppingCartPresenter {
             LocalData.shared.selectedProducts[currentProduct] = 1
         }
         
-//        self.askSelectedProducts()
         self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
-//        self.view?.updatePrice()
-//        self.view?.collectionView.reloadData()
+
+        self.updatePrice()
         self.view?.buttonIsClicked()
     }
     
@@ -199,10 +210,9 @@ extension ShoppingCartPresenter {
             LocalData.shared.totalBill = 0.0
         }
         
-//        self.askSelectedProducts()
         self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
-//        self.view?.updatePrice()
-//        self.view?.collectionView.reloadData()
+
+        self.updatePrice()
         self.view?.buttonIsClicked()
 
     }
@@ -219,10 +229,9 @@ extension ShoppingCartPresenter {
             LocalData.shared.selectedProducts[currentProduct] = 1
         }
         
-//        self.askSelectedProducts()
         self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
-//        self.view?.updatePrice()
-//        self.view?.collectionView.reloadData()
+
+        self.updatePrice()
         self.view?.buttonIsClicked()
 
     }
@@ -243,14 +252,10 @@ extension ShoppingCartPresenter {
             LocalData.shared.totalBill = 0.0
         }
         
-//        self.askSelectedProducts()
         self.selectedProductsArray = LocalData.shared.selectedProducts.map { ($0.key, $0.value) }
-//        print("updated")
-//        self.view?.updatePrice()
-//        self.view?.collectionView.reloadData()
-        self.view?.buttonIsClicked()
-//        print("button click")
 
+        self.updatePrice()
+        self.view?.buttonIsClicked()
     }
     
     @objc func closeButtonTapped() {
@@ -260,8 +265,10 @@ extension ShoppingCartPresenter {
     @objc func deleteButtonTapped() {
         LocalData.shared.selectedProducts.removeAll()
         LocalData.shared.totalBill = 0.0
+        
         self.askSelectedProducts()
-        self.view?.updatePrice()
+        self.updatePrice()
+        
         self.view?.collectionView.reloadData()
     }
     
@@ -274,7 +281,7 @@ extension ShoppingCartPresenter {
             LocalData.shared.totalBill = 0.0
             
             self.askSelectedProducts()
-            self.view?.updatePrice()
+            self.updatePrice()
             
             self.view?.collectionView.reloadData()
             self.routeToProductListing()

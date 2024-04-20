@@ -15,7 +15,7 @@ final class SplashInteractor {
 extension SplashInteractor: SplashInteractorProtocol {
     
     func checkInternetConnection() {
-        let internetStatus = true // Check the internet status if needed.
+        let internetStatus = true // Check the internet status if needed. But there is an internet connection in this case :)
         self.output?.internetConnection(status: internetStatus)
     }
     

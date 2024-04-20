@@ -192,7 +192,9 @@ extension ProductListingPresenter {
         self.view?.setupNavigationBar()
         self.view?.collectionView.reloadData()
     }
-    
+}
+
+extension ProductListingPresenter: ProductListingPresenterObjCProtocol {
     @objc func navbarBasketButtonTapped() {
         self.routeToShoppingCart(product: Product.dummy)
     }
