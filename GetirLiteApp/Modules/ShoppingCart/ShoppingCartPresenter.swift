@@ -170,6 +170,12 @@ extension ShoppingCartPresenter {
         formatter.maximumFractionDigits = 2
         if let formattedAmount = formatter.string(from: NSNumber(value: LocalData.shared.totalBill)) {
             self.view?.billLabel.text = formattedAmount
+            
+            if formattedAmount == "₺0,00" {
+                self.view?.defaultAddButton.isHidden = true
+            } else {
+                self.view?.defaultAddButton.isHidden = false
+            }
         }
     }
 }
