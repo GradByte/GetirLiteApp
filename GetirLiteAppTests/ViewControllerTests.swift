@@ -12,56 +12,68 @@ final class ViewControllerTests: XCTestCase {
     
     // Product Listing View Controller (PLVC)
     func testPLVCUpdateWithProducts() {
+        let expectation = XCTestExpectation(description: "Products stored successfully")
+        
         let mockInteractor = ProductListingInteractor()
         let mockRouter = ProductListingRouter()
         let mockPresenter = ProductListingPresenter(router: mockRouter, interactor: mockInteractor)
-        let view = ProductListingViewController(presenter: mockPresenter)
+        let mockView = ProductListingViewController(presenter: mockPresenter)
         mockInteractor.presenter = mockPresenter
         
         
         let testMainProduct = MainProduct(id: "", name: "", attribute: "", thumbnailURL: "", imageURL: "", price: 0.0, priceText: "", shortDescription: "")
-        let testSugggestedProduct = SuggestedProduct(id: "", imageURL: "", price: 0.0, name: "", priceText: "", shortDescription: "", category: "", unitPrice: 0.0, squareThumbnailURL: "", status: 0)
+        let testSuggestedProduct = SuggestedProduct(id: "", imageURL: "", price: 0.0, name: "", priceText: "", shortDescription: "", category: "", unitPrice: 0.0, squareThumbnailURL: "", status: 0)
         mockPresenter.mainProducts.append(testMainProduct)
-        mockPresenter.suggestedProducts.append(testSugggestedProduct)
+        mockPresenter.suggestedProducts.append(testSuggestedProduct)
         
         
-        view.viewDidLoad()
+        mockView.viewDidLoad()
 
         
-        XCTAssertTrue(view.collectionView.numberOfItems(inSection: 0) == 1)
-        XCTAssertTrue(view.collectionView.numberOfItems(inSection: 1) == 1)
+        XCTAssertTrue(mockView.collectionView.numberOfItems(inSection: 0) == 1)
+        XCTAssertTrue(mockView.collectionView.numberOfItems(inSection: 1) == 1)
+        expectation.fulfill()
     }
     
     // Product Detail View Controller (PDVC)
     func testPDVCUpdateWithProducts() {
+        let expectation = XCTestExpectation(description: "Products stored successfully")
+        
         let mockInteractor = ProductDetailInteractor()
         let mockRouter = ProductDetailRouter()
         let mockPresenter = ProductDetailPresenter(router: mockRouter, interactor: mockInteractor, product: Product.dummy)
-        let view = ProductDetailViewController(presenter: mockPresenter)
+        let mockView = ProductDetailViewController(presenter: mockPresenter)
         
         
-        view.viewDidLoad()
+        mockView.viewDidLoad()
 
         
-        XCTAssertTrue(view.nameLabel.text == "dummy")
+        XCTAssertTrue(mockView.nameLabel.text == "dummy")
+        expectation.fulfill()
     }
     
     // Shopping Cart View Controller (SCVC)
     func testSCVCUpdateWithProducts() {
+        let expectation = XCTestExpectation(description: "Products stored successfully")
+
         let mockInteractor = ShoppingCartInteractor()
         let mockRouter = ShoppingCartRouter()
         let mockPresenter = ShoppingCartPresenter(router: mockRouter, interactor: mockInteractor)
-        let view = ShoppingCartViewController(presenter: mockPresenter)
+        let mockView = ShoppingCartViewController(presenter: mockPresenter)
         
         
-        let testSugggestedProduct = SuggestedProduct(id: "", imageURL: "", price: 0.0, name: "", priceText: "", shortDescription: "", category: "", unitPrice: 0.0, squareThumbnailURL: "", status: 0)
-        mockPresenter.suggestedProducts.append(testSugggestedProduct)
+        let testSuggestedProduct = SuggestedProduct(id: "", imageURL: "", price: 0.0, name: "", priceText: "", shortDescription: "", category: "", unitPrice: 0.0, squareThumbnailURL: "", status: 0)
+        let testSelectedProduct = Product.dummy
+        mockPresenter.suggestedProducts.append(testSuggestedProduct)
+        mockPresenter.selectedProductsArray.append((testSelectedProduct, 1))
         
         
-        view.viewDidLoad()
+        mockView.viewDidLoad()
 
         
-        XCTAssertTrue(view.collectionView.numberOfItems(inSection: 1) == 1)
+        XCTAssertTrue(mockView.collectionView.numberOfItems(inSection: 0) == 1)
+        XCTAssertTrue(mockView.collectionView.numberOfItems(inSection: 1) == 1)
+        expectation.fulfill()
     }
 
 }
