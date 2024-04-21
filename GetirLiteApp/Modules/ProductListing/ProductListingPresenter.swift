@@ -24,6 +24,7 @@ final class ProductListingPresenter {
         self.router = router
         self.interactor = interactor
     }
+    
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {

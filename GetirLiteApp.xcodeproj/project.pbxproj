@@ -49,6 +49,7 @@
 		AA927DA92BCD54220018A223 /* SplashProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DA82BCD54220018A223 /* SplashProtocols.swift */; };
 		AA927DAB2BCD5DE10018A223 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA927DAA2BCD5DE10018A223 /* Networking.swift */; };
 		AA9DEA912BD14CD500CEF89B /* SelectedProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9DEA902BD14CD500CEF89B /* SelectedProductCell.swift */; };
+		AAA66A222BD52E06002A439F /* ViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA66A212BD52E06002A439F /* ViewControllerTests.swift */; };
 		AAF1EA712BCEC03900F5DA26 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = AAF1EA702BCEC03900F5DA26 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +107,7 @@
 		AA927DA82BCD54220018A223 /* SplashProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashProtocols.swift; sourceTree = "<group>"; };
 		AA927DAA2BCD5DE10018A223 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		AA9DEA902BD14CD500CEF89B /* SelectedProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedProductCell.swift; sourceTree = "<group>"; };
+		AAA66A212BD52E06002A439F /* ViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +311,7 @@
 			children = (
 				AA67E6D22BD434E7008DE59D /* GetirLiteAppTests.swift */,
 				AA67E6DB2BD44259008DE59D /* NetworkingManagerTests.swift */,
+				AAA66A212BD52E06002A439F /* ViewControllerTests.swift */,
 			);
 			path = GetirLiteAppTests;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAA66A222BD52E06002A439F /* ViewControllerTests.swift in Sources */,
 				AA67E6D32BD434E7008DE59D /* GetirLiteAppTests.swift in Sources */,
 				AA67E6DC2BD44259008DE59D /* NetworkingManagerTests.swift in Sources */,
 			);
