@@ -14,13 +14,13 @@
 </p>
 
 ## Screenshots
-| ![Main Page](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin.png) | ![Add Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin1.png) | ![Travel Details](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin2.png) | ![Edit Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signup.png) |
+| ![Splash Screen](https://github.com/GradByte/GetirLiteApp/blob/main/images/1.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/2.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/3.png) | ![Product Detail](https://github.com/GradByte/GetirLiteApp/blob/main/images/4.png) |
 | --- | --- | --- | --- |
-| Sign In | Sign In Alert | Sign In Alert | Sign Up |
+| Splash Screen | Product Listing | Product Listing | Product Detail |
 
-| ![Main Page](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signup1.png) | ![Add Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Chat.png) | ![Travel Details](https://github.com/GradByte/ChatApp/blob/main/screenshots/AddChat.png) | ![Edit Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Message.png) |
+| ![Product Detail](https://github.com/GradByte/GetirLiteApp/blob/main/images/5.png) | ![Shopping Cart](https://github.com/GradByte/GetirLiteApp/blob/main/images/6.png) | ![Shopping Cart](https://github.com/GradByte/GetirLiteApp/blob/main/images/7.png) | ![Order Message](https://github.com/GradByte/GetirLiteApp/blob/main/images/8.png) |
 | --- | --- | --- | --- |
-| Sign Up Alert | Chats | Add Chat | Messages |
+| Product Detail | Shopping Cart | Shopping Cart | Order Message |
 
 ## Features
 
