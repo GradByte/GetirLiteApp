@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <p align="center">
-    Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp.
+    Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp. Check out the 1-min <a href="https://youtu.be/OP9xOmV3u68">demo video</a>.
   </p>
 </p>
 
