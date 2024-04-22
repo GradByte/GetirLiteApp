@@ -54,6 +54,7 @@
 		AAA66A2A2BD58AA3002A439F /* InteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA66A292BD58AA3002A439F /* InteractorTests.swift */; };
 		AAA66A2C2BD58B77002A439F /* EntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA66A2B2BD58B77002A439F /* EntityTests.swift */; };
 		AAA66A2E2BD58CE6002A439F /* RouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA66A2D2BD58CE6002A439F /* RouterTests.swift */; };
+		AAA66A312BD65E0C002A439F /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAA66A2F2BD65E0C002A439F /* DataModel.xcdatamodeld */; };
 		AAF1EA712BCEC03900F5DA26 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = AAF1EA702BCEC03900F5DA26 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +117,7 @@
 		AAA66A292BD58AA3002A439F /* InteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractorTests.swift; sourceTree = "<group>"; };
 		AAA66A2B2BD58B77002A439F /* EntityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityTests.swift; sourceTree = "<group>"; };
 		AAA66A2D2BD58CE6002A439F /* RouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterTests.swift; sourceTree = "<group>"; };
+		AAA66A302BD65E0C002A439F /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 				AA20C34F2BC7EE79000873F8 /* Resources */,
 				AA20C34D2BC7EDF4000873F8 /* App */,
 				AA20C3442BC7ECF9000873F8 /* LaunchScreen.storyboard */,
+				AAA66A2F2BD65E0C002A439F /* DataModel.xcdatamodeld */,
 				AA20C3472BC7ECF9000873F8 /* Info.plist */,
 			);
 			path = GetirLiteApp;
@@ -474,6 +477,7 @@
 				AA3B870F2BD282EF00AC7DFA /* SectionHeaderView.swift in Sources */,
 				AA20C3922BC8383F000873F8 /* BaseViewController.swift in Sources */,
 				AA081F492BCFDA300012E9CF /* ProductDetailInteractor.swift in Sources */,
+				AAA66A312BD65E0C002A439F /* DataModel.xcdatamodeld in Sources */,
 				AA62EB492BCEA14700656A1C /* ProductCell.swift in Sources */,
 				AA081F4B2BCFDA3B0012E9CF /* ProductDetailPresenter.swift in Sources */,
 				AA20C38B2BC836E5000873F8 /* SplashInteractor.swift in Sources */,
@@ -802,6 +806,19 @@
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		AAA66A2F2BD65E0C002A439F /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AAA66A302BD65E0C002A439F /* DataModel.xcdatamodel */,
+			);
+			currentVersion = AAA66A302BD65E0C002A439F /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = AA20C32E2BC7ECF7000873F8 /* Project object */;
 }

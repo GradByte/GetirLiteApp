@@ -15,12 +15,13 @@ protocol ProductProtocol {
     var attributeString: String? { get }
 }
 
-struct Product: ProductProtocol, Hashable {
+struct Product: ProductProtocol, Hashable, Codable {
     let id: String?
     let imageURLString: String?
     let name: String?
     let price: Double?
     let attributeString: String?
+    
     
     init(mainProduct: MainProduct) {
         id = mainProduct.id
