@@ -51,13 +51,9 @@ class LocalData {
             let localDataEntities = try context.fetch(fetchRequest)
             if let localDataEntity = localDataEntities.last {
                 if let jsonString = localDataEntity.selectedProducts {
-                    // Convert JSON string to data
                     if let jsonData = jsonString.data(using: .utf8) {
                         do {
-                            // Decode data into dictionary [String: Int]
                             let loadedData = try JSONDecoder().decode([Product: Int].self, from: jsonData)
-                            // Assuming the dictionary keys are product IDs (String)
-                            // You may need to convert these string IDs back to Product instances
                             self.selectedProducts = loadedData
                         } catch {
                             print("Error decoding selectedProducts from JSON: \(error.localizedDescription)")
@@ -69,9 +65,6 @@ class LocalData {
         } catch {
             print("Error fetching LocalData from Core Data: \(error.localizedDescription)")
         }
-        
-        print("Total Bill: \(totalBill)")
-        print("Selected Products: \(selectedProducts)")
     }
 
 }

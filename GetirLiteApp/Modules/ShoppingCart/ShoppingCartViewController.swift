@@ -187,9 +187,8 @@ extension ShoppingCartViewController {
         defaultAddButton.layer.cornerRadius = 10
         defaultAddButton.layer.masksToBounds = true
         
-        defaultAddButton.layer.borderWidth = 1.5
+        defaultAddButton.layer.borderWidth = 1.2
         defaultAddButton.layer.borderColor = GetirColor.almostWhiteGray.cgColor
-        
         
         buttonLabel.backgroundColor = GetirColor.purple
         buttonLabel.text = "Siparişi Tamamla"
