@@ -5,7 +5,7 @@
 # Getir Lite App
 <br />
 <p align="center">
-  <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fgetir.com%2Fde%2Fimages%2F&psig=AOvVaw1HpHYgBMBAE63QKAVBFytJ&ust=1713879469350000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOD9hdn41YUDFQAAAAAdAAAAABAE">
+  <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFRfpTsLYD7KKlzJEd1kMqYnDK_dCDYnFF1etg8OsS2g&s">
     <img src="logo.jpeg" alt="Logo" width="100" height="100">
   </a>
   <p align="center">
