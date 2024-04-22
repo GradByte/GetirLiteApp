@@ -1,7 +1,3 @@
-
-[![Swift Version][swift-image]][swift-url]
-[![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
-
 # Getir Lite App
 <br />
 <p align="center">
@@ -58,6 +54,10 @@ Running this application is a straightforward process, requiring no special conf
 ## Meta
 
 Efe Ertekin – [@Instagram](https://www.instagram.com/gradbyte.codes/)
+
+
+[![Swift Version][swift-image]][swift-url]
+[![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
 
 [swift-image]:https://img.shields.io/badge/swift-5.5.2-orange.svg
 [swift-url]: https://swift.org/
