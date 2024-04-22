@@ -1,10 +1,6 @@
 # Getir Lite App
 <br />
-<p align="center">
-  <p align="center">
-    Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp. Check out the 1-min <a href="https://youtu.be/OP9xOmV3u68">demo video</a>.
-  </p>
-</p>
+Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp. Check out the 1-min <a href="https://youtu.be/OP9xOmV3u68">demo video</a>. Screenshots and the video use iPhone 15 Pro.
 
 ## Screenshots
 | ![Splash Screen](https://github.com/GradByte/GetirLiteApp/blob/main/images/1.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/2.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/3.png) | ![Product Detail](https://github.com/GradByte/GetirLiteApp/blob/main/images/4.png) |
@@ -58,6 +54,19 @@ Efe Ertekin – [@Instagram](https://www.instagram.com/gradbyte.codes/) - [@Link
 
 [![Swift Version][swift-image]][swift-url]
 [![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
+
+## Other Devices
+| ![Splash Screen](https://github.com/GradByte/GetirLiteApp/blob/main/images/SE1.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/SE2.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/SE3.png) |
+| --- | --- | --- |
+| iPhone SE | iPhone SE | iPhone SE |
+
+| ![Splash Screen](https://github.com/GradByte/GetirLiteApp/blob/main/images/8P1.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/8P2.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/8P3.png) |
+| --- | --- | --- |
+| iPhone 8 Plus | iPhone 8 Plus | iPhone 8 Plus |
+
+| ![Splash Screen](https://github.com/GradByte/GetirLiteApp/blob/main/images/PM1.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/PM2.png) | ![Product Listing](https://github.com/GradByte/GetirLiteApp/blob/main/images/PM3.png) |
+| --- | --- | --- |
+| iPhone 15 Pro Max | iPhone 15 Pro Max | iPhone 15 Pro Max |
 
 [swift-image]:https://img.shields.io/badge/swift-5.5.2-orange.svg
 [swift-url]: https://swift.org/
