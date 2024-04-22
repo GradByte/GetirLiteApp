@@ -53,7 +53,7 @@ Running this application is a straightforward process, requiring no special conf
 
 ## Meta
 
-Efe Ertekin – [@Instagram](https://www.instagram.com/gradbyte.codes/)
+Efe Ertekin – [@Instagram](https://www.instagram.com/gradbyte.codes/) - [@LinkedIn](https://www.linkedin.com/in/efe-ertekin/)
 
 
 [![Swift Version][swift-image]][swift-url]
