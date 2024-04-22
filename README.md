@@ -31,7 +31,7 @@
 
 ## How to run?
 
-Running this application is a straightforward process, requiring no special configurations. However, should you encounter any issues during execution, ensure that you are utilizing the recommended versions of the package dependencies listed below:
+Running this application is a straightforward process, requiring no special configurations. However, in case you encounter any issues during execution, ensure that you are utilizing the recommended versions of the package dependencies listed below:
 
 - Alamofire: 5.9.1
 - Kingfisher: 7.11.0
