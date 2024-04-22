@@ -5,18 +5,22 @@
 # Getir Lite App
 <br />
 <p align="center">
-  <a href="https://github.com/alexanderritik/Best-README-Template">
-    <img src="logo.jpeg" alt="Logo" width="80" height="80">
+  <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fgetir.com%2Fde%2Fimages%2F&psig=AOvVaw1HpHYgBMBAE63QKAVBFytJ&ust=1713879469350000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOD9hdn41YUDFQAAAAAdAAAAABAE">
+    <img src="logo.jpeg" alt="Logo" width="100" height="100">
   </a>
   <p align="center">
     Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp.
   </p>
 </p>
 
-<p align="row">
-<img src= "https://media.giphy.com/media/HYOlBKJBqgAfe/giphy.gif" width="400" >
-<img src= "https://media.giphy.com/media/HYOlBKJBqgAfe/giphy.gif" width="400" >
-</p>
+## Screenshots
+| ![Main Page](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin.png) | ![Add Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin1.png) | ![Travel Details](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signin2.png) | ![Edit Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signup.png) |
+| --- | --- | --- | --- |
+| Sign In | Sign In Alert | Sign In Alert | Sign Up |
+
+| ![Main Page](https://github.com/GradByte/ChatApp/blob/main/screenshots/Signup1.png) | ![Add Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Chat.png) | ![Travel Details](https://github.com/GradByte/ChatApp/blob/main/screenshots/AddChat.png) | ![Edit Travel](https://github.com/GradByte/ChatApp/blob/main/screenshots/Message.png) |
+| --- | --- | --- | --- |
+| Sign Up Alert | Chats | Add Chat | Messages |
 
 ## Features
 
