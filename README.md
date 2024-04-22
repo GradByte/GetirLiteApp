@@ -5,9 +5,6 @@
 # Getir Lite App
 <br />
 <p align="center">
-  <a href="https://seeklogo.com/images/G/getir-logo-59D695FD42-seeklogo.com.png">
-    <img src="logo.jpeg" alt="Logo" width="100" height="100">
-  </a>
   <p align="center">
     Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp.
   </p>
