@@ -1,5 +1,4 @@
 # Getir Lite App
-<br />
 Getir Lite App is a scaled down version of the iOS app for Getir. This app was developed as the final project of Getir and Patika's bootcamp. Check out the 1-min <a href="https://youtu.be/OP9xOmV3u68">demo video</a>. Screenshots and the video use iPhone 15 Pro.
 
 ## Screenshots
