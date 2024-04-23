@@ -21,7 +21,7 @@ struct MainProduct: Codable, Hashable, ProductProtocol {
     let price: Double?
     let priceText, shortDescription: String?
     
-    // Implementing protocol properties
+    // Implementing protocol properties for ProductProtocol
     var imageURLString: String? {
         return imageURL ?? thumbnailURL
     }
@@ -48,7 +48,7 @@ struct SuggestedProduct: Codable, Hashable, ProductProtocol {
     let squareThumbnailURL: String?
     let status: Int?
     
-    // Implementing protocol properties
+    // Implementing protocol properties for ProductProtocol
     var imageURLString: String? {
         return imageURL ?? squareThumbnailURL
     }

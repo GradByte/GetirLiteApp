@@ -46,6 +46,8 @@ Running this application is a straightforward process, requiring no special conf
     - Persistence: The use of Core Data ensures that selected products and total bill are preserved across app sessions, preventing data loss.
     - Lifecycle Management: The app utilizes lifecycle events such as closing and opening to trigger Core Data operations for saving and loading data, maintaining continuity in user experience.
 
+![alt text](https://github.com/GradByte/GetirLiteApp/blob/main/images/structure.png)
+
 ## Meta
 
 Efe Ertekin – [@Instagram](https://www.instagram.com/gradbyte.codes/) - [@LinkedIn](https://www.linkedin.com/in/efe-ertekin/)
