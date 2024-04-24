@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-struct NetworkingManager {
+class NetworkingManager {
     static let shared = NetworkingManager()
     
     func fetchMainProducts(completion: @escaping ([MainProduct]?) -> Void) {
